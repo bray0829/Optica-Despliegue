@@ -1,16 +1,9 @@
-/* Nueva Remisión - Estilo visual igual a Nuevo Examen */
-
-:root {
-  --bg: #f4f9ff;
-  --card: #ffffff;
-  --muted: #6b7280;
-  --accent: #2b7bff;
-  --accent-600: #2a6ef3;
-}
+/* === Nueva Remisión === */
+/* Basado en el estilo de NuevoExamen, adaptado al JSX de NuevoRemision */
 
 .nuevo-paciente-container {
   min-height: 90vh;
-  background: var(--bg);
+  background: var(--color-fondo);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,25 +11,46 @@
   box-sizing: border-box;
 }
 
+/* === Card principal === */
 .card-wrap {
   width: 90%;
   max-width: 720px;
-  background: var(--card);
+  background: var(--color-fondo-card);
   border-radius: 12px;
   padding: 20px 24px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 10px 30px var(--color-sombra);
+  border: 1px solid var(--color-borde);
   position: relative;
   margin: 0 auto;
+  color: var(--color-texto);
   box-sizing: border-box;
 }
 
-/* Botón de volver */
-.back-inline {
+/* === Header === */
+.card-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.main-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-acento);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--color-texto-secundario);
+}
+
+/* === Botón de volver === */
+.back-button {
   position: absolute;
   left: 18px;
   top: 18px;
-  background: var(--accent);
-  color: #fff;
+  background: var(--color-acento);
+  color: var(--color-texto-boton);
   border-radius: 12px;
   padding: 10px 12px;
   border: none;
@@ -48,45 +62,31 @@
   box-shadow: 0 8px 22px rgba(41, 65, 110, 0.08);
   cursor: pointer;
   z-index: 20;
-  font-weight: 700;
-}
-.back-inline:hover { transform: translateY(-2px); }
-
-/* Títulos */
-.main-title {
-  font-size: 24px;
-  color: var(--accent-600);
-  font-weight: 700;
-  margin: 0;
-}
-.subtitle {
-  color: var(--muted);
-  margin-top: 6px;
-  font-size: 14px;
 }
 
-/* Secciones */
+/* === Secciones === */
 .section {
-  margin-top: 20px;
-}
-.section-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--accent-600);
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-/* Formulario */
+.section-title {
+  font-size: 18px;
+  color: var(--color-acento);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* === Campos y formulario === */
 .paciente-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -95,25 +95,27 @@
   min-width: 260px;
 }
 
+/* === Inputs === */
 label {
   display: block;
   font-size: 13px;
-  color: var(--muted);
+  color: var(--color-texto-secundario);
   margin-bottom: 4px;
 }
 
-input[type=text],
-input[type=email],
-input[type=tel],
-input[type=date],
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
 textarea,
 select {
   width: 100%;
   box-sizing: border-box;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid #eef3fb;
-  background: var(--card);
+  border: 1px solid var(--color-borde);
+  background: var(--color-input);
+  color: var(--color-texto);
   font-size: 14px;
   height: 40px;
 }
@@ -124,116 +126,150 @@ textarea {
   padding: 10px 12px;
 }
 
-/* Autocompletado */
+/* === Buscador de paciente === */
 .search-input {
-  position: relative;
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
+
 .search-input input {
   flex: 1;
 }
+
 .search-button {
-  background: #f3f7ff;
-  border: 1px solid #e6f0ff;
+  background: var(--color-acento);
+  border: none;
+  color: var(--color-texto-boton);
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-weight: 600;
 }
+
 .suggestions-list {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  background: #fff;
-  border: 1px solid #eef3fb;
+  margin-top: 6px;
+  background: var(--color-fondo-card);
+  border: 1px solid var(--color-borde);
   border-radius: 8px;
-  padding: 6px 0;
-  z-index: 50;
-  max-height: 220px;
-  overflow: auto;
-  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px var(--color-sombra);
 }
+
 .suggestions-list li {
   padding: 8px 12px;
   cursor: pointer;
-}
-.suggestions-list li:hover {
-  background: #f7fbff;
+  color: var(--color-texto);
 }
 
-/* Errores */
+.suggestions-list li:hover {
+  background: var(--color-hover);
+}
+
+/* === Errores === */
 .form-error {
   padding: 10px;
   border-radius: 8px;
-  background: #fff4f4;
-  border: 1px solid #ffd6d6;
-  color: #7b1111;
+  background: var(--color-error-fondo);
+  border: 1px solid var(--color-error-borde);
+  color: var(--color-error-texto);
   margin-bottom: 10px;
 }
 
-/* Botones inferiores */
+/* === Botones === */
 .actions-row {
   display: flex;
-  justify-content: center;
   gap: 10px;
-  margin-top: 16px;
+  justify-content: flex-end;
 }
 
 .submit-button {
-  padding: 10px 16px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-600));
-  color: #fff;
+  background: linear-gradient(180deg, var(--color-acento), var(--color-acento-secundario));
+  color: var(--color-texto-boton);
   border: none;
   border-radius: 10px;
-  width: 100%;
-  max-width: 360px;
+  padding: 10px 16px;
   font-weight: 700;
-  font-size: 15px;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(43, 123, 255, 0.18);
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
+
+.submit-button:hover {
+  transform: translateY(-1px);
+}
+
 .submit-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 .cancel-button {
-  background: #f3f7ff;
-  border: 1px solid #e6f0ff;
-  padding: 8px 10px;
-  border-radius: 8px;
+  background: var(--color-boton-secundario);
+  color: var(--color-texto);
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  padding: 10px 16px;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-/* Responsivo */
+.cancel-button:hover {
+  background: var(--color-hover);
+}
+
+/* === Scroll personalizado === */
+.suggestions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+}
+
+/* === Responsive === */
 @media (max-width: 900px) {
   .card-wrap {
     width: 95%;
     padding: 16px;
   }
+
   .form-row {
     flex-direction: column;
   }
+
   .form-group {
     flex: 1 1 100%;
   }
+
   .main-title {
     font-size: 20px;
   }
+
+  .submit-button {
+    width: 100%;
+  }
+
+  .actions-row {
+    flex-direction: column;
+  }
 }
+
 @media (max-width: 480px) {
   .card-wrap {
     padding: 12px;
   }
-  input[type=text],
-  input[type=email],
-  input[type=tel],
-  input[type=date],
-  textarea {
-    padding: 8px;
-  }
+
   .main-title {
     font-size: 18px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 13px;
   }
 }

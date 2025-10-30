@@ -21,13 +21,13 @@ const CitasRegistradas = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedCancel, setSelectedCancel] = useState(null);
 
-  // Cargar perfil del usuario autenticado
+  // ✅ Cargar perfil del usuario autenticado
   useEffect(() => {
     if (!user?.id) return;
     let mounted = true;
     const loadPerfil = async () => {
       try {
-        const p = await usuariosService.getUsuarioById(user.id);
+        const p = await usuariosService.getUsuarioByAuthId(user.id); // ✅ corregido
         console.log("Perfil cargado:", p);
         if (mounted) setPerfil(p);
       } catch (err) {
@@ -38,7 +38,7 @@ const CitasRegistradas = () => {
     return () => { mounted = false; };
   }, [user?.id]);
 
-  // Cargar citas (espera a tener perfil)
+  // ✅ Cargar citas (espera a tener perfil)
   useEffect(() => {
     if (!user?.id || !perfil) return;
     let mounted = true;
@@ -46,7 +46,6 @@ const CitasRegistradas = () => {
     const fetchCitas = async () => {
       setLoading(true);
       try {
-        // Traer todas las citas y luego filtrar en frontend según rol (se puede ajustar para filtrar en query si prefieres)
         const { data: rowsAll, error: errCitas } = await supabase
           .from("citas")
           .select("*")
@@ -60,7 +59,7 @@ const CitasRegistradas = () => {
 
         const rows = rowsAll || [];
 
-        // Enriquecer datos con nombres de paciente y especialista
+        // Enriquecer datos con nombres
         const pacienteIds = Array.from(new Set(rows.map(r => r.paciente_id).filter(Boolean)));
         const especialistaIds = Array.from(new Set(rows.map(r => r.especialista_id).filter(Boolean)));
 
@@ -107,34 +106,32 @@ const CitasRegistradas = () => {
           };
         });
 
-        // FILTRO POR ROL (case-insensitive)
+        // ✅ Filtro por rol
         let finalRows = enriched;
         const rol = String(perfil?.rol || "").toLowerCase();
-        console.log("rol detectado (lowercase):", rol);
+        console.log("Rol detectado:", rol);
 
         if (rol === "admin" || rol === "administrador") {
-          console.log("🔓 Administrador detectado: mostrando todas las citas");
-          // finalRows = enriched (sin filtro)
+          console.log("🔓 Administrador: todas las citas");
         } else if (rol === "especialista") {
-          const esp = await especialistasService.getEspecialistaByUsuarioId(user.id);
+          const esp = await especialistasService.getEspecialistaByUsuarioId(perfil.id);
           if (esp?.id) {
             finalRows = enriched.filter(r => String(r.especialista_id) === String(esp.id));
           } else {
-            finalRows = []; // no es especialista registrado
+            finalRows = [];
           }
         } else if (rol === "paciente") {
           const { data: pacienteData } = await supabase
             .from("pacientes")
             .select("id")
-            .eq("usuario_id", user.id)
+            .eq("usuario_id", perfil.id)
             .maybeSingle();
           if (pacienteData?.id) {
             finalRows = enriched.filter(r => String(r.paciente_id) === String(pacienteData.id));
           } else {
-            finalRows = []; // no tiene paciente relacionado
+            finalRows = [];
           }
         } else {
-          // Rol desconocido: por seguridad no mostrar nada (ajusta si deseas otro comportamiento)
           console.warn("Rol no reconocido:", perfil?.rol);
           finalRows = [];
         }
@@ -154,14 +151,14 @@ const CitasRegistradas = () => {
     return () => { mounted = false; };
   }, [user?.id, perfil]);
 
-  // Filtro de búsqueda
+  // 🔍 Filtro de búsqueda
   const filtradas = citas.filter(c => {
     if (!filtro) return true;
     const b = filtro.toLowerCase();
     return (c.doctor && c.doctor.toLowerCase().includes(b)) || (c.fecha && c.fecha.includes(b));
   });
 
-  // Modales y acciones
+  // ⚙️ Modales y acciones
   const handleView = (c) => { setDetailItem(c); setDetailOpen(true); };
   const handleCancel = (c) => { setSelectedCancel(c); setCancelOpen(true); };
 
@@ -234,9 +231,21 @@ const CitasRegistradas = () => {
         </div>
       )}
 
-      {detailOpen && <DetailModal open={detailOpen} onClose={() => setDetailOpen(false)} item={detailItem} tableName="citas" fields={["fecha","hora","paciente_nombre","doctor","motivo"]} />}
+      {detailOpen && (
+        <DetailModal
+          open={detailOpen}
+          onClose={() => setDetailOpen(false)}
+          item={detailItem}
+          tableName="citas"
+          fields={["fecha", "hora", "paciente_nombre", "doctor", "motivo"]}
+        />
+      )}
 
-      <ModalCancelarCita open={cancelOpen} onClose={() => setCancelOpen(false)} onSubmit={submitCancel} />
+      <ModalCancelarCita
+        open={cancelOpen}
+        onClose={() => setCancelOpen(false)}
+        onSubmit={submitCancel}
+      />
     </main>
   );
 };

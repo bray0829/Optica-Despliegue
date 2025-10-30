@@ -10,7 +10,8 @@ import "./style.css";
 
 const CitasRegistradas = () => {
   const navigate = useNavigate();
-  const { user, perfil } = useAuth(); // 👈 obtenemos perfil directamente del contexto
+  const { user, perfil } = useAuth();
+
   const [citas, setCitas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState("");
@@ -20,139 +21,160 @@ const CitasRegistradas = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedCancel, setSelectedCancel] = useState(null);
 
-  // Cargar citas
+  // ✅ CARGAR CITAS SEGÚN ROL
   useEffect(() => {
-    if (!perfil) return; // Esperamos el perfil
+    if (!perfil) return;
+
     let mounted = true;
 
-    const fetchCitas = async () => {
+    const loadCitas = async () => {
       setLoading(true);
+
       try {
-        console.log("🔍 Cargando citas... Rol:", perfil.rol);
+        const rol = perfil.rol?.toLowerCase();
+        let query = supabase.from("citas").select("*").order("fecha");
 
-        const { data: rowsAll, error: errCitas } = await supabase
-          .from("citas")
-          .select("*")
-          .order("fecha", { ascending: true });
+        // ✅ FILTRAR SEGÚN ROL
 
-        if (errCitas) {
-          console.error("❌ Error cargando citas:", errCitas);
-          if (mounted) setCitas([]);
-          return;
-        }
-
-        const rows = rowsAll || [];
-
-        // 🔹 Enriquecer datos
-        const pacienteIds = Array.from(new Set(rows.map(r => r.paciente_id).filter(Boolean)));
-        const especialistaIds = Array.from(new Set(rows.map(r => r.especialista_id).filter(Boolean)));
-
-        const pacientesMap = {};
-        if (pacienteIds.length > 0) {
-          const { data: pacientesData } = await supabase
-            .from("pacientes")
-            .select("id,nombre")
-            .in("id", pacienteIds);
-          (pacientesData || []).forEach(p => { pacientesMap[p.id] = p; });
-        }
-
-        const especialistasMap = {};
-        const usuarioIdsForEspecialistas = [];
-        if (especialistaIds.length > 0) {
-          const { data: eps } = await supabase
-            .from("especialistas")
-            .select("id,usuario_id,especialidad")
-            .in("id", especialistaIds);
-          (eps || []).forEach(e => {
-            especialistasMap[e.id] = e;
-            if (e.usuario_id) usuarioIdsForEspecialistas.push(e.usuario_id);
-          });
-        }
-
-        const usuariosMap = {};
-        if (usuarioIdsForEspecialistas.length > 0) {
-          const { data: usuariosData } = await supabase
-            .from("usuarios")
-            .select("id,nombre")
-            .in("id", usuarioIdsForEspecialistas);
-          (usuariosData || []).forEach(u => { usuariosMap[u.id] = u; });
-        }
-
-        const enriched = rows.map(r => {
-          const paciente = pacientesMap[r.paciente_id];
-          const especialista = especialistasMap[r.especialista_id];
-          const especialistaUsuario = especialista ? usuariosMap[especialista.usuario_id] : null;
-          return {
-            ...r,
-            paciente_nombre: paciente?.nombre || "",
-            doctor: especialistaUsuario?.nombre || "",
-            especialidad: especialista?.especialidad || "",
-          };
-        });
-
-        // 🔥 Filtrado según rol
-        const rol = String(perfil?.rol || "").toLowerCase();
-        let finalRows = [];
-
-        if (rol === "administrador" || rol === "admin") {
-          console.log("✅ Administrador detectado — mostrando TODAS las citas");
-          finalRows = enriched;
-        } else if (rol === "especialista") {
-          const esp = await especialistasService.getEspecialistaByUsuarioId(perfil.id);
-          if (esp?.id) {
-            finalRows = enriched.filter(r => String(r.especialista_id) === String(esp.id));
-          }
-        } else if (rol === "paciente") {
-          const { data: pacienteData } = await supabase
+        // 👉 PACIENTE: buscar paciente_id desde usuario_id
+        if (rol === "paciente") {
+          const { data: paciente } = await supabase
             .from("pacientes")
             .select("id")
             .eq("usuario_id", perfil.id)
             .maybeSingle();
-          if (pacienteData?.id) {
-            finalRows = enriched.filter(r => String(r.paciente_id) === String(pacienteData.id));
+
+          if (paciente?.id) {
+            query = query.eq("paciente_id", paciente.id);
           }
         }
 
-        if (mounted) setCitas(finalRows);
+        // 👉 ESPECIALISTA: buscar especialista_id desde usuario_id
+        if (rol === "especialista") {
+          const especialista = await especialistasService.getEspecialistaByUsuarioId(perfil.id);
+          if (especialista?.id) {
+            query = query.eq("especialista_id", especialista.id);
+          }
+        }
+
+        // 👉 ADMIN: no filtra nada
+
+        const { data: citasData, error } = await query;
+        if (error) throw error;
+
+        if (!mounted) return;
+
+        //----------------------------------------------------
+        // ✅ ENRIQUECER DATOS
+        //----------------------------------------------------
+
+        const pacienteIds = [...new Set(citasData.map(c => c.paciente_id))].filter(Boolean);
+        const especialistaIds = [...new Set(citasData.map(c => c.especialista_id))].filter(Boolean);
+
+        // ✅ Pacientes
+        let pacientesMap = {};
+        if (pacienteIds.length > 0) {
+          const { data: pacientes } = await supabase
+            .from("pacientes")
+            .select("id, nombre")
+            .in("id", pacienteIds);
+
+          pacientesMap = Object.fromEntries(
+            (pacientes || []).map(p => [p.id, p])
+          );
+        }
+
+        // ✅ Especialistas
+        let especialistasMap = {};
+        let usuarioIds = [];
+
+        if (especialistaIds.length > 0) {
+          const { data: espDB } = await supabase
+            .from("especialistas")
+            .select("id, usuario_id, especialidad")
+            .in("id", especialistaIds);
+
+          espDB?.forEach(e => {
+            especialistasMap[e.id] = e;
+            if (e.usuario_id) usuarioIds.push(e.usuario_id);
+          });
+        }
+
+        // ✅ Usuarios (doctores)
+        let usuariosMap = {};
+        if (usuarioIds.length > 0) {
+          const { data: usuarios } = await supabase
+            .from("usuarios")
+            .select("id, nombre")
+            .in("id", usuarioIds);
+
+          usuariosMap = Object.fromEntries(
+            (usuarios || []).map(u => [u.id, u])
+          );
+        }
+
+        //----------------------------------------------------
+        // ✅ CONSTRUIR DATOS LISTOS PARA MOSTRAR
+        //----------------------------------------------------
+
+        const enriched = citasData.map(cita => {
+          const p = pacientesMap[cita.paciente_id];
+          const e = especialistasMap[cita.especialista_id];
+          const u = e ? usuariosMap[e.usuario_id] : null;
+
+          return {
+            ...cita,
+            paciente_nombre: p?.nombre || "Paciente",
+            doctor: u?.nombre || "Sin doctor",
+            especialidad: e?.especialidad || "",
+          };
+        });
+
+        setCitas(enriched);
+
       } catch (err) {
-        console.error("Error general cargando citas:", err);
-        if (mounted) setCitas([]);
+        console.error("❌ Error cargando citas:", err);
+        setCitas([]);
       } finally {
         if (mounted) setLoading(false);
       }
     };
 
-    fetchCitas();
-
-    return () => { mounted = false; };
+    loadCitas();
+    return () => (mounted = false);
   }, [perfil]);
 
+  // ✅ FILTRO
   const filtradas = citas.filter(c => {
     if (!filtro) return true;
-    const b = filtro.toLowerCase();
-    return (c.doctor && c.doctor.toLowerCase().includes(b)) || (c.fecha && c.fecha.includes(b));
+    const text = filtro.toLowerCase();
+    return (
+      (c.doctor && c.doctor.toLowerCase().includes(text)) ||
+      (c.fecha && c.fecha.includes(text))
+    );
   });
 
-  const handleView = (c) => { setDetailItem(c); setDetailOpen(true); };
-  const handleCancel = (c) => { setSelectedCancel(c); setCancelOpen(true); };
-
-  const submitCancel = async (motivo) => {
-    if (!motivo?.trim()) return alert("Por favor ingresa un motivo para la cancelación.");
-    if (!selectedCancel) return;
-    const { error } = await supabase.from("citas").delete().eq("id", selectedCancel.id);
-    if (error) {
-      alert("Error al cancelar la cita");
-      console.error(error);
-      return;
-    }
-    setCitas(prev => prev.filter(x => x.id !== selectedCancel.id));
-    alert("Cita cancelada correctamente");
-    setCancelOpen(false);
-    setSelectedCancel(null);
+  // ✅ ACCIONES
+  const handleView = (c) => {
+    setDetailItem(c);
+    setDetailOpen(true);
   };
 
-  const rolLower = String(perfil?.rol || "").toLowerCase();
-  const isAdmin = rolLower === "administrador" || rolLower === "admin";
+  const handleCancel = (c) => {
+    setSelectedCancel(c);
+    setCancelOpen(true);
+  };
+
+  const submitCancel = async (motivo) => {
+    if (!motivo?.trim()) return alert("Debes escribir un motivo.");
+    const { error } = await supabase.from("citas").delete().eq("id", selectedCancel.id);
+    if (error) return alert("Error al cancelar");
+    setCitas(prev => prev.filter(x => x.id !== selectedCancel.id));
+    setCancelOpen(false);
+  };
+
+  const rolLower = perfil?.rol?.toLowerCase();
+  const isAdmin = rolLower === "admin" || rolLower === "administrador";
 
   return (
     <main className="citas-registradas">
@@ -172,6 +194,7 @@ const CitasRegistradas = () => {
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
         />
+
         {!isAdmin && (
           <button className="boton-nuevo" onClick={() => navigate("/agendar-cita")}>
             + Agendar Cita
@@ -187,22 +210,29 @@ const CitasRegistradas = () => {
         <div className="grid-citas">
           {filtradas.map(c => (
             <div key={c.id} className="card-cita">
-              <h3 className="card-title">{c.paciente_nombre || "Paciente"}</h3>
+              <h3 className="card-title">{c.paciente_nombre}</h3>
 
               <div className="card-subtitle">
                 <span className="fecha">{c.fecha}</span>
-                {c.doctor && <span className="dot">·</span>}
-                <span className="doctor-name">{c.doctor || "Sin doctor"}</span>
+                <span className="dot">·</span>
+                <span className="doctor-name">{c.doctor}</span>
               </div>
 
               <div className="card-meta">
-                <span className="hora"><strong>Hora:</strong> {c.hora}</span>
-                <span className="motivo"><strong>Motivo:</strong> {c.motivo}</span>
+                <span><strong>Hora:</strong> {c.hora}</span>
+                <span><strong>Motivo:</strong> {c.motivo}</span>
               </div>
 
               <div className="acciones-card">
-                <button className="btn-ver" onClick={() => handleView(c)}>Ver</button>
-                {!isAdmin && <button className="btn-eliminar" onClick={() => handleCancel(c)}>Cancelar</button>}
+                <button className="btn-ver" onClick={() => handleView(c)}>
+                  Ver
+                </button>
+
+                {!isAdmin && (
+                  <button className="btn-eliminar" onClick={() => handleCancel(c)}>
+                    Cancelar
+                  </button>
+                )}
               </div>
             </div>
           ))}

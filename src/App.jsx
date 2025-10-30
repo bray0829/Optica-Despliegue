@@ -36,50 +36,48 @@ function App() {
     <SettingsProvider>
       <Router>
         <Routes>
-          {/* Páginas públicas */}
+          {/* 🔓 Rutas públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-password/success" element={<ResetSuccess />} />
 
-          {/* Páginas privadas dentro del layout */}
+          {/* 🔒 Rutas protegidas con Layout */}
           <Route
-            path="/*"
+            path="/"
             element={
               <PrivateRoute>
-                <Layout>
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/pacientes" element={<Pacientes />} />
-                    <Route path="/nuevo-paciente" element={<NuevoPaciente />} />
-                    <Route path="/examenes" element={<Examenes />} />
-                    <Route path="/nuevo-examen" element={<NuevoExamen />} />
-                    <Route path="/examen/:id" element={<DetalleExamen />} />
-                    <Route path="/remisiones" element={<Remisiones />} />
-                    <Route path="/nuevo-remision" element={<NuevoRemision />} />
-                    <Route path="/citas" element={<Citas />} />
-                    <Route path="/citas-registradas" element={<CitasRegistradas />} />
-                    <Route path="/agendar-cita" element={<AgendarCita />} />
-                    <Route path="/juegos" element={<JuegosHome />} />
-                    <Route path="/juegos/seguir-punto" element={<SeguirPunto />} />
-                    <Route path="/juegos/encontrar-letra" element={<EncontrarLetra />} />
-                    <Route
-                      path="/admin/users"
-                      element={
-                        <AdminRoute>
-                          <AdminUsers />
-                        </AdminRoute>
-                      }
-                    />
-                  </Routes>
-                </Layout>
+                <Layout />
               </PrivateRoute>
             }
-          />
+          >
+            <Route index element={<Home />} />
+            <Route path="pacientes" element={<Pacientes />} />
+            <Route path="nuevo-paciente" element={<NuevoPaciente />} />
+            <Route path="examenes" element={<Examenes />} />
+            <Route path="nuevo-examen" element={<NuevoExamen />} />
+            <Route path="examen/:id" element={<DetalleExamen />} />
+            <Route path="remisiones" element={<Remisiones />} />
+            <Route path="nuevo-remision" element={<NuevoRemision />} />
+            <Route path="citas" element={<Citas />} />
+            <Route path="citas-registradas" element={<CitasRegistradas />} />
+            <Route path="agendar-cita" element={<AgendarCita />} />
+            <Route path="juegos" element={<JuegosHome />} />
+            <Route path="juegos/seguir-punto" element={<SeguirPunto />} />
+            <Route path="juegos/encontrar-letra" element={<EncontrarLetra />} />
+            <Route
+              path="admin/users"
+              element={
+                <AdminRoute>
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
+          </Route>
         </Routes>
 
-        {/* ⚙️ Burbuja de ajustes flotante */}
+        {/* ⚙️ Burbuja flotante de ajustes */}
         <FloatingSettingsBubble />
       </Router>
     </SettingsProvider>

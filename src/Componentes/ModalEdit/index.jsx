@@ -26,32 +26,39 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
   const handleSave = async () => {
     setLoading(true);
     try {
-      if (supabase) {
-        // ✅ Creamos un payload solo con campos editables
-        const payload = {};
-        fields.forEach((k) => {
-          // ⚠️ Excluir campos no editables o que causan error
-          if (!['usuario_id', 'paciente_id', 'especialista_id', 'id'].includes(k)) {
-            payload[k] = form[k];
-          }
-        });
-
-        const { error } = await supabase
-          .from(tableName)
-          .update(payload)
-          .eq('id', item.id);
-
-        if (error) throw error;
-
-        onSaved && onSaved({ action: 'saved', item: { ...item, ...payload } });
-      } else {
-        // fallback local
-        onSaved && onSaved({ action: 'saved', item: { ...form } });
+      if (!supabase) {
+        console.error("Supabase no inicializado");
+        return;
       }
+
+      // ✅ Solo guardamos campos editables
+      const nonEditable = ['usuario_id', 'paciente_id', 'especialista_id', 'id'];
+      const payload = {};
+
+      for (const key of fields) {
+        if (!nonEditable.includes(key)) {
+          payload[key] = form[key];
+        }
+      }
+
+      if (Object.keys(payload).length === 0) {
+        alert("No hay campos editables para guardar.");
+        setLoading(false);
+        return;
+      }
+
+      const { error } = await supabase
+        .from(tableName)
+        .update(payload)
+        .eq('id', item.id);
+
+      if (error) throw error;
+
+      onSaved && onSaved({ action: 'saved', item: { ...item, ...payload } });
       onClose();
     } catch (err) {
-      console.error('Save error', err);
-      alert('Error al guardar. Ver consola para detalles.');
+      console.error('Error al guardar:', err);
+      alert('Error al guardar los cambios. Revisa la consola para más detalles.');
     } finally {
       setLoading(false);
     }
@@ -61,17 +68,13 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
     if (!confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')) return;
     setLoading(true);
     try {
-      if (supabase) {
-        const { error } = await supabase.from(tableName).delete().eq('id', item.id);
-        if (error) throw error;
-        onSaved && onSaved({ action: 'deleted', id: item.id });
-      } else {
-        onSaved && onSaved({ action: 'deleted', id: item.id });
-      }
+      const { error } = await supabase.from(tableName).delete().eq('id', item.id);
+      if (error) throw error;
+      onSaved && onSaved({ action: 'deleted', id: item.id });
       onClose();
     } catch (err) {
-      console.error('Delete error', err);
-      alert('Error al eliminar. Ver consola para detalles.');
+      console.error('Error al eliminar:', err);
+      alert('Error al eliminar el registro. Revisa la consola para más detalles.');
     } finally {
       setLoading(false);
     }
@@ -89,20 +92,25 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
           {fields.length === 0 ? (
             <p>No hay campos configurados para editar.</p>
           ) : (
-            fields.map((f) => (
-              <div key={f} className="modal-field">
-                <label htmlFor={f}>
-                  {f.charAt(0).toUpperCase() + f.slice(1).replace(/([A-Z])/g, ' $1')}
-                </label>
-                <input
-                  id={f}
-                  name={f}
-                  value={form[f] ?? ''}
-                  onChange={handleChange}
-                  disabled={['usuario_id', 'paciente_id', 'especialista_id', 'id'].includes(f)}
-                />
-              </div>
-            ))
+            fields.map((f) => {
+              const isDisabled = ['usuario_id', 'paciente_id', 'especialista_id', 'id'].includes(f);
+              return (
+                <div key={f} className="modal-field">
+                  <label htmlFor={f}>
+                    {f.charAt(0).toUpperCase() + f.slice(1).replace(/([A-Z])/g, ' $1')}
+                  </label>
+                  <input
+                    id={f}
+                    name={f}
+                    value={form[f] ?? ''}
+                    onChange={handleChange}
+                    disabled={isDisabled}
+                    className={isDisabled ? 'disabled-field' : ''}
+                    placeholder={isDisabled ? 'Campo no editable' : ''}
+                  />
+                </div>
+              );
+            })
           )}
         </div>
 

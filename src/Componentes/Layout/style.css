@@ -1,4 +1,4 @@
-/* Paleta de azules y blanco */
+/* 🎨 Paleta base */
 :root {
   --azul-oscuro: #0a2342;
   --azul-claro: #2563eb;
@@ -10,12 +10,17 @@
   --gris-claro: #f3f4f6;
 }
 
+/* ============================ */
+/* 🌞 MODO CLARO (por defecto)  */
+/* ============================ */
 .layout-base {
   display: flex;
   min-height: 100vh;
   height: 100vh;
   background: linear-gradient(120deg, var(--azul-suave) 0%, var(--blanco) 100%);
   overflow: hidden;
+  color: #111827;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .layout-content {
@@ -27,11 +32,11 @@
   align-items: stretch;
   gap: 1rem;
   min-height: 0;
-  /* allow the content to grow naturally and avoid nested full-viewport scrolling */
   box-sizing: border-box;
   overflow-y: auto;
 }
 
+/* Tarjetas (modo claro) */
 .card {
   background: var(--blanco);
   border-radius: 16px;
@@ -44,4 +49,49 @@
   align-items: center;
   max-width: 920px;
   width: 100%;
+  color: #111827;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ============================ */
+/* 🌚 MODO OSCURO               */
+/* ============================ */
+html[data-theme="dark"] .layout-base,
+.layout-base.dark {
+  background: linear-gradient(120deg, #0a0a0a 0%, #1e1e1e 100%) !important;
+  color: #f3f4f6 !important;
+}
+
+html[data-theme="dark"] .layout-content,
+.layout-base.dark .layout-content {
+  background: none;
+  color: #f3f4f6;
+}
+
+/* Tarjetas en modo oscuro */
+html[data-theme="dark"] .card,
+.layout-base.dark .card {
+  background: #1e293b !important; /* azul oscuro tipo panel */
+  border: 2px solid rgba(255,255,255,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  color: #f3f4f6 !important;
+}
+
+/* Texto dentro de tarjetas */
+html[data-theme="dark"] .card * {
+  background: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+/* Sidebar modo oscuro */
+html[data-theme="dark"] .sidebar,
+.layout-base.dark .sidebar {
+  background-color: #1f2937 !important;
+  color: #f3f4f6 !important;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Scrollbar más visible en dark mode */
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
 }

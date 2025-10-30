@@ -1,234 +1,148 @@
 /* ==================================================== */
-/* 💡 DEFINICIÓN DE VARIABLES DE TEMA */
+/* 🎨 VARIABLES GLOBALES DE TEMA */
 /* ==================================================== */
 :root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-
-    /* VARIABLES DE TEMA CLARO (Valores por defecto) */
-    --color-text-primary: #213547;
-    --color-bg-primary: #ffffff;    /* Fondo de la página principal (main-content) */
-    --color-bg-secondary: #f0f0f0;  /* Fondo del Sidebar */
-    --color-button-bg: #f9f9f9;
-    --color-accent: #007bff;        /* Azul de enlaces/botones neutros */
-    --color-accent-hover: #0056b3; 
-    --color-button-accent: #007bff; /* Color de los botones de acción */
+  --color-text-primary: #111827;
+  --color-bg-primary: #f3f4f6;
+  --color-bg-secondary: #ffffff;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-navbar: #1e3a8a;
+  --color-footer-bg: #222;
+  --color-footer-text: #fff;
 }
 
-/* SOBRESCRIBIR VARIABLES PARA TEMA OSCURO */
+/* === Tema Oscuro === */
 [data-theme="dark"] {
-    --color-text-primary: #f5f5f5;   /* Texto más claro para mejor legibilidad */
-    --color-bg-primary: #121212;     /* Fondo principal oscuro (más legible que negro puro) */
-    --color-bg-secondary: #1e1e1e;   /* Fondo del Sidebar con contraste */
-    --color-button-bg: #2a2a2a;      /* Fondo de botones neutros más oscuro */
-    --color-accent: #4a90e2;         /* Azul claro para contraste */
-    --color-accent-hover: #5d9ee5;
-    --color-button-accent: #1976D2;  /* Azul oscuro para botones de acción */
+  --color-text-primary: #f9fafb;
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1f2937;
+  --color-accent: #60a5fa;
+  --color-accent-hover: #3b82f6;
+  --color-navbar: #374151;
+  --color-footer-bg: #1e293b;
+  --color-footer-text: #e5e7eb;
 }
 
 /* ==================================================== */
-/* 💡 APLICACIÓN DE ESTILOS GLOBALES Y CONTENEDORES */
+/* 🌎 ESTILOS GLOBALES */
 /* ==================================================== */
-
-body {
-    margin: 0;
-    min-width: 320px;
-    min-height: 100vh;
-    /* CORRECCIÓN CLAVE: El body debe aplicar siempre las variables de tema */
-    background-color: var(--color-bg-primary); 
-    color: var(--color-text-primary);
-    transition: all 0.3s ease; 
+html, body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* CORRECCIÓN CLAVE: Asegura que los encabezados usen el color de texto del tema */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--color-text-primary);
-    font-size: 3.2em;
-    line-height: 1.1;
+/* ==================================================== */
+/* 🧭 NAVBAR Y FOOTER */
+/* ==================================================== */
+.navbar {
+  background-color: var(--color-navbar);
+  color: #fff;
+  padding: 1rem 2rem;
+  transition: background-color 0.3s ease;
 }
 
-/* Estilos para el Sidebar */
-.sidebar {
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    /* Uso de la variable para el borde del sidebar, garantiza el color correcto en dark mode */
-    border-right: 1px solid var(--color-button-bg); 
+.footer {
+  background-color: var(--color-footer-bg);
+  color: var(--color-footer-text);
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Estilos para el Contenido Principal (área blanca en la captura) */
-.main-content {
-    /* CORRECCIÓN: Esta clase debe asegurar que el fondo sea el color primario del tema */
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
-    flex-grow: 1; /* Esto es común si el layout usa flexbox para sidebar + contenido */
-    padding: 20px; /* Relleno para que el contenido no esté pegado al borde */
-}
-
-/* Ajustes para el texto en .main-content */
-.main-content {
+/* ==================================================== */
+/* 🧱 TARJETAS Y CONTENEDORES */
+/* ==================================================== */
+.main-content, .page-container, .content {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Estilos de Tipografía y Enlaces */
-a {
-    font-weight: 500;
-    color: var(--color-accent);
-    text-decoration: inherit;
-}
-a:hover {
-    color: var(--color-accent-hover);
-}
-
-/* Estilos para Botones Neutros (Ej. "Pequeño", "Mediano", "Grande") */
-button {
-    border-radius: 8px;
-    /* Usa la variable de fondo para el borde */
-    border: 1px solid var(--color-button-bg); 
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: var(--color-button-bg); 
-    color: var(--color-text-primary); 
-    cursor: pointer;
-    transition: border-color 0.25s, background-color 0.25s, color 0.25s;
-}
-
-/* Botones de acción (Ej. "Cambiar Tema", "Activar/Desactivar") */
-.button-accent {
-    background-color: var(--color-button-accent);
-    color: white; /* Texto blanco sobre azul fuerte */
-    border: none;
-}
-
-.button-accent:hover {
-    filter: brightness(1.3); 
-}
-
-/* ---------------------------------------------------- */
-/* ESTILOS DE TAMAÑO DE FUENTE */
-/* ---------------------------------------------------- */
-
-[data-font-size="small"] {
-    font-size: 14px;
-}
-[data-font-size="medium"] {
-    font-size: 16px; /* Base */
-}
-[data-font-size="large"] {
-    font-size: 18px;
-}
-
-/* Estilos para el encabezado en tema oscuro */
-.header {
+[class^="card-"], [class*=" card-"] {
   background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
-  padding: 1em;
-  border-bottom: 1px solid #333333; /* Línea divisoria para mejor separación */
-}
-
-/* Estilos para las tarjetas en tema oscuro */
-.card-examen {
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-  border: 1px solid #444444;
+  border: 1px solid rgba(0,0,0,0.1);
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   padding: 1em;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.card-examen:hover {
-  background-color: #2a2a2a; /* Fondo más oscuro en hover */
-  color: var(--color-text-primary);
-}
-
-/* Estilos para los botones en las tarjetas */
-.acciones-card button {
-  background-color: var(--color-button-bg);
-  color: var(--color-text-primary);
-  border: 1px solid #444444;
-  border-radius: 4px;
-  padding: 0.5em 1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.acciones-card button:hover {
-  background-color: #3a3a3a;
-  color: #ffffff;
+/* Hover */
+[class^="card-"]:hover, [class*=" card-"]:hover {
+  background-color: var(--color-accent-hover);
+  color: #fff;
 }
 
 /* ==================================================== */
-/* Global dark-mode overrides (apply examenes dark style to all pages) */
-/* These rules force containers and card-like components to use the dark
-     theme variables when html[data-theme="dark"] is active. We explicitly
-     avoid touching .button-accent and other action colors so buttons keep
-     their visual identity. */
-html[data-theme="dark"] .main-content,
-html[data-theme="dark"] .page-container,
-html[data-theme="dark"] .content,
-html[data-theme="dark"] .examenes {
-    background-color: var(--color-bg-primary) !important;
-    color: var(--color-text-primary) !important;
+/* ✏️ TIPOGRAFÍA Y ENLACES */
+/* ==================================================== */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary);
 }
 
-/* Generic card selector: any class that starts with "card-" will be
-     styled to match examenes cards in dark mode */
-html[data-theme="dark"] [class^="card-"],
-html[data-theme="dark"] [class*=" card-"] {
-    background-color: var(--color-bg-secondary) !important;
-    color: var(--color-text-primary) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.6) !important;
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-/* Ensure headings and paragraph text inside main content/cards use the
-     theme's text color */
-html[data-theme="dark"] .main-content h1,
-html[data-theme="dark"] .main-content h2,
-html[data-theme="dark"] .main-content h3,
-html[data-theme="dark"] .main-content p,
-html[data-theme="dark"] [class^="card-"] h1,
-html[data-theme="dark"] [class^="card-"] h2,
-html[data-theme="dark"] [class^="card-"] h3,
-html[data-theme="dark"] [class^="card-"] p {
-    color: var(--color-text-primary) !important;
+a:hover {
+  color: var(--color-accent-hover);
 }
 
-/* Inputs inside main content should remain usable (white background) */
-html[data-theme="dark"] .main-content input,
-html[data-theme="dark"] .main-content .input-busqueda,
-html[data-theme="dark"] input[type="text"],
-html[data-theme="dark"] textarea {
-    background-color: #ffffff !important;
-    color: #111827 !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
+/* ==================================================== */
+/* 🔘 BOTONES */
+/* ==================================================== */
+button {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
 }
 
-/* Extra force: ensure any card-like component and its descendants do not
-     keep a white background when dark mode is active. This targets per-page
-     CSS that sets `background: white` on nested elements. */
-html[data-theme="dark"] .grid-examenes .card-examen {
-    background-color: var(--color-bg-secondary) !important;
-    color: var(--color-text-primary) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
+button:hover {
+  background-color: var(--color-accent-hover);
 }
 
-/* Make descendants transparent so inner white elements don't show through */
-html[data-theme="dark"] .grid-examenes .card-examen * {
-    background: transparent !important;
-    color: var(--color-text-primary) !important;
+/* ==================================================== */
+/* 🪟 INPUTS Y FORMULARIOS */
+/* ==================================================== */
+input, textarea, select {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  padding: 8px;
+  width: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Generic fallback: any element with class starting with card- anywhere */
-html[data-theme="dark"] [class^="card-"] {
-    background-color: var(--color-bg-secondary) !important;
-    color: var(--color-text-primary) !important;
+/* ==================================================== */
+/* 🕶️ MODO OSCURO: REGLAS EXTRAS */
+/* ==================================================== */
+[data-theme="dark"] [class^="card-"],
+[data-theme="dark"] [class*=" card-"],
+[data-theme="dark"] .main-content,
+[data-theme="dark"] .content,
+[data-theme="dark"] .page-container {
+  background-color: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
 }
 
+/* inputs blancos en modo oscuro */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}

@@ -28,7 +28,7 @@ const FloatingSettingsBubble = () => {
 
       {open && (
         <div className="settings-panel">
-          <h4>Accesibilidad</h4>
+          <h4></h4>
 
           <div className="setting-item">
             <label>Modo:</label>

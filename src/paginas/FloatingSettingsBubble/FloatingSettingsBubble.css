@@ -1,0 +1,72 @@
+.floating-settings {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.settings-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background 0.3s;
+}
+
+.settings-button:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+.settings-panel {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  padding: 15px;
+  width: 220px;
+  animation: fadeIn 0.3s ease;
+}
+
+.settings-panel h4 {
+  margin-top: 0;
+  text-align: center;
+  color: #333;
+}
+
+.setting-item {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.setting-item button, 
+.setting-item select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tema oscuro */
+[data-theme="dark"] .settings-panel {
+  background: #222;
+  color: #fff;
+}
+
+[data-theme="dark"] .settings-button {
+  background: #444;
+}

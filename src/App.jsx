@@ -25,22 +25,20 @@ import "./assets/form-styles.css";
 import PrivateRoute from "./Componentes/PrivateRoute";
 import AdminRoute from "./Componentes/AdminRoute";
 import AdminUsers from "./paginas/Admin/Users";
-import SettingsProvider from './context/SettingsContext';
-import Ajustes from './paginas/Ajustes';
+import SettingsProvider from "./context/SettingsContext";
+import FloatingSettingsBubble from "./Componentes/FloatingSettingsBubble";
 
 function App() {
   return (
     <SettingsProvider>
       <Router>
         <Routes>
-          {/* Rutas públicas sin layout (sin sidebar) */}
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-password/success" element={<ResetSuccess />} />
 
-          {/* Rutas protegidas con layout (panel principal con sidebar) */}
           <Route
             path="/*"
             element={
@@ -54,21 +52,30 @@ function App() {
                     <Route path="/nuevo-examen" element={<NuevoExamen />} />
                     <Route path="/examen/:id" element={<DetalleExamen />} />
                     <Route path="/remisiones" element={<Remisiones />} />
+                    <Route path="/nuevo-remision" element={<NuevoRemision />} />
                     <Route path="/citas" element={<Citas />} />
                     <Route path="/citas-registradas" element={<CitasRegistradas />} />
                     <Route path="/agendar-cita" element={<AgendarCita />} />
                     <Route path="/juegos" element={<JuegosHome />} />
-                    <Route path="/nuevo-remision" element={<NuevoRemision />} />
                     <Route path="/juegos/seguir-punto" element={<SeguirPunto />} />
                     <Route path="/juegos/encontrar-letra" element={<EncontrarLetra />} />
-                    <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-                    <Route path="/ajustes" element={<Ajustes />} />
+                    <Route
+                      path="/admin/users"
+                      element={
+                        <AdminRoute>
+                          <AdminUsers />
+                        </AdminRoute>
+                      }
+                    />
                   </Routes>
                 </Layout>
               </PrivateRoute>
             }
           />
         </Routes>
+
+        {/* 💡 Burbuja flotante visible en toda la app */}
+        <FloatingSettingsBubble />
       </Router>
     </SettingsProvider>
   );

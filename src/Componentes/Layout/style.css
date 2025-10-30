@@ -1,97 +1,47 @@
-/* 🎨 Paleta base */
-:root {
-  --azul-oscuro: #0a2342;
-  --azul-claro: #2563eb;
-  --azul-medio: #1e40af;
-  --azul-suave: #e3f0ff;
-  --azul-card: #f5faff;
-  --azul-borde: rgba(46,92,154,0.06);
-  --blanco: #fff;
-  --gris-claro: #f3f4f6;
-}
-
-/* ============================ */
-/* 🌞 MODO CLARO (por defecto)  */
-/* ============================ */
+/* ===== Layout Base ===== */
 .layout-base {
   display: flex;
   min-height: 100vh;
-  height: 100vh;
-  background: linear-gradient(120deg, var(--azul-suave) 0%, var(--blanco) 100%);
   overflow: hidden;
-  color: #111827;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.layout-content {
-  flex: 1;
-  padding: 1.2rem 0.7rem;
-  background: none;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1rem;
-  min-height: 0;
-  box-sizing: border-box;
+/* ===== Sidebar ===== */
+.sidebar {
+  width: 250px;
+  background-color: var(--sidebar-bg, #1e293b);
+  color: white;
+  transition: width 0.3s ease;
+  flex-shrink: 0;
   overflow-y: auto;
 }
 
-/* Tarjetas (modo claro) */
-.card {
-  background: var(--blanco);
-  border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(46,92,154,0.10);
-  border: 2px solid var(--azul-suave);
-  padding: 1rem 1.2rem;
-  margin-bottom: 0.8rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 920px;
-  width: 100%;
-  color: #111827;
-  transition: background-color 0.3s ease, color 0.3s ease;
+.sidebar.collapsed {
+  width: 80px;
 }
 
-/* ============================ */
-/* 🌚 MODO OSCURO               */
-/* ============================ */
-html[data-theme="dark"] .layout-base,
+/* ===== Contenido Principal ===== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--content-bg, #f9fafb);
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* ===== Tema Oscuro ===== */
 .layout-base.dark {
-  background: linear-gradient(120deg, #0a0a0a 0%, #1e1e1e 100%) !important;
-  color: #f3f4f6 !important;
+  --sidebar-bg: #0f172a;
+  --content-bg: #1e293b;
+  color: white;
 }
 
-html[data-theme="dark"] .layout-content,
-.layout-base.dark .layout-content {
-  background: none;
-  color: #f3f4f6;
+/* ===== Scroll ===== */
+.main-content::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Tarjetas en modo oscuro */
-html[data-theme="dark"] .card,
-.layout-base.dark .card {
-  background: #1e293b !important; /* azul oscuro tipo panel */
-  border: 2px solid rgba(255,255,255,0.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-  color: #f3f4f6 !important;
-}
-
-/* Texto dentro de tarjetas */
-html[data-theme="dark"] .card * {
-  background: transparent !important;
-  color: #f3f4f6 !important;
-}
-
-/* Sidebar modo oscuro */
-html[data-theme="dark"] .sidebar,
-.layout-base.dark .sidebar {
-  background-color: #1f2937 !important;
-  color: #f3f4f6 !important;
-  border-right: 1px solid rgba(255,255,255,0.1);
-}
-
-/* Scrollbar más visible en dark mode */
-html[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
+.main-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }

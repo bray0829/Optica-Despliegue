@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import Sidebar from '../Sidebar';
-import { SettingsContext } from '../../context/SettingsContext'; // 👈 importa el contexto
+import { SettingsContext } from '../../context/SettingsContext';
 import './style.css';
 
 const Layout = ({ children }) => {
-  const { theme } = useContext(SettingsContext); // 👈 obtiene el tema actual (light/dark)
+  const { theme } = useContext(SettingsContext);
 
   return (
-    <div className={`layout-base ${theme === 'dark' ? 'dark' : ''}`}>
+    <div className={`layout-container ${theme === 'dark' ? 'dark' : ''}`}>
       <Sidebar />
-      <main className="main-content">
+      <main className="layout-content">
         {children}
       </main>
     </div>

@@ -1,7 +1,8 @@
 import supabase from '../lib/supabaseClient';
 
-// Nombre del bucket configurable por .env (Vite): VITE_SUPABASE_BUCKET_NAME
-// Si no está definida, se usará el bucket por defecto 'examenes'.
+// ==========================================================
+// ⚙️ Configuración general
+// ==========================================================
 const BUCKET = import.meta.env.VITE_SUPABASE_BUCKET_NAME || 'examenes';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -32,8 +33,8 @@ async function uploadFile(file, folder = '') {
     throw error;
   }
 
-  // Intentamos obtener la URL pública (si el bucket es público)
-  const { data: publicData } = supabase.storage.from(BUCKET).getPublicUrl(data.path) || {};
+  const { data: publicData } =
+    supabase.storage.from(BUCKET).getPublicUrl(data.path) || {};
 
   return {
     path: data.path,
@@ -63,7 +64,7 @@ function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
     const url = `${SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/${encodeURIComponent(
       BUCKET
     )}/${encodeURIComponent(path)}`;
-    // Supabase storage object API expects PUT for direct object upload
+
     xhr.open('PUT', url);
     xhr.setRequestHeader('apikey', SUPABASE_ANON_KEY);
     xhr.setRequestHeader('Authorization', `Bearer ${SUPABASE_ANON_KEY}`);
@@ -80,8 +81,8 @@ function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
     xhr.onload = async () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         try {
-          // Obtener URL pública inmediatamente después de subir (si el bucket es público)
-          const { data: publicData } = supabase.storage.from(BUCKET).getPublicUrl(path) || {};
+          const { data: publicData } =
+            supabase.storage.from(BUCKET).getPublicUrl(path) || {};
           resolve({ path, publicUrl: publicData?.publicUrl || null });
         } catch (err) {
           reject(err);
@@ -91,7 +92,7 @@ function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
         try {
           const json = JSON.parse(xhr.responseText || '{}');
           if (json && json.message) message = json.message;
-  } catch { /* ignore parse error */ }
+        } catch {}
         reject(new Error(message));
       }
     };
@@ -125,13 +126,31 @@ async function updateExamen(id, updates) {
   return data;
 }
 
-async function listExamenes() {
-  const { data, error } = await supabase
+// ==========================================================
+// 📄 LISTAR EXÁMENES (ADMIN Y ESPECIALISTA VEN TODOS)
+// ==========================================================
+async function listExamenes(rol, userId) {
+  let query = supabase
     .from('examenes')
     .select(
-      `id, fecha, notas, pdf_path, paciente_id, pacientes ( id, nombre )`
+      `
+      id,
+      fecha,
+      notas,
+      pdf_path,
+      paciente_id,
+      especialista_id,
+      pacientes ( id, nombre )
+    `
     )
     .order('fecha', { ascending: false });
+
+  // 🔒 Solo filtra si es paciente
+  if (rol === 'paciente') {
+    query = query.eq('paciente_id', userId);
+  }
+
+  const { data, error } = await query;
   if (error) throw error;
   return data || [];
 }
@@ -166,11 +185,9 @@ async function uploadPdfAndGetPublicUrl(file, folder = '') {
 
   const uploaded = await uploadFile(file, folder);
   if (!uploaded || !uploaded.path) throw new Error('Error al subir PDF');
-  // No exigimos publicUrl (el bucket puede ser privado). Devolvemos la ruta y opcionalmente publicUrl.
   return uploaded;
 }
 
-// Alias que el frontend usa en varios lugares: devuelve { path, publicUrl }
 async function uploadPdfAndGetSignedPath(file, folder = '') {
   return uploadPdfAndGetPublicUrl(file, folder);
 }
@@ -198,7 +215,7 @@ async function checkBucketExists() {
 }
 
 // ==========================================================
-// 🗑️ ELIMINAR ARCHIVO
+// 🗑️ ELIMINAR ARCHIVO / EXAMEN
 // ==========================================================
 async function deleteFile(path) {
   if (!path) return { ok: true };
@@ -207,10 +224,14 @@ async function deleteFile(path) {
   return { ok: true };
 }
 
-// Eliminar examen por id (y opcionalmente eliminar archivo asociado)
 async function deleteExamen(id) {
   if (!id) throw new Error('Missing id');
-  const { data, error } = await supabase.from('examenes').delete().eq('id', id).select().single();
+  const { data, error } = await supabase
+    .from('examenes')
+    .delete()
+    .eq('id', id)
+    .select()
+    .single();
   if (error) throw error;
   return data;
 }
@@ -228,7 +249,7 @@ function validateFile(file, { maxSizeBytes, allowedTypes }) {
 }
 
 // ==========================================================
-// EXPORTACIÓN
+// 🧩 EXPORTACIÓN FINAL
 // ==========================================================
 export default {
   uploadFile,

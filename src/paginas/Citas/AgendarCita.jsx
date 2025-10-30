@@ -269,7 +269,6 @@ const AgendarCita = () => {
   return (
       <main className="nuevo-paciente-container">
         <div className="card-wrap">
-          <button type="button" className="back-button" onClick={() => navigate('/citas')}>←</button>
           <header className="card-header">
             <h1 className="main-title">Agendar Cita</h1>
             <p className="subtitle">Selecciona paciente, especialista y horario.</p>

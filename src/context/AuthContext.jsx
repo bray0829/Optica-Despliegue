@@ -17,20 +17,20 @@ export function AuthProvider({ children }) {
         const sessionUser = data?.session?.user ?? null;
 
         if (!mounted) return;
-
         setUser(sessionUser);
 
         if (sessionUser) {
-          // Buscar perfil en la tabla usuarios
-          const { data: perfilData, error } = await supabase
-            .from('usuarios')
-            .select('*')
-            .eq('auth_id', sessionUser.id)
-            .single();
+          // 🔹 Buscar perfil por el mismo id del usuario en supabase.auth
+          const perfilData = await usuariosService.getUsuarioById(sessionUser.id);
 
-          if (!error && perfilData) {
+          if (perfilData) {
             setPerfil(perfilData);
+            console.log('✅ Perfil cargado correctamente:', perfilData);
+          } else {
+            console.warn('⚠️ No se encontró perfil en la tabla usuarios para este ID:', sessionUser.id);
           }
+        } else {
+          setPerfil(null);
         }
       } catch (err) {
         console.error('❌ Error cargando sesión AuthProvider:', err);
@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     user,
-    perfil, // 👈 ahora tienes acceso directo al rol y datos
+    perfil,
     loading,
     signIn: (opts) => supabase.auth.signInWithPassword(opts),
     signUp: (opts) => supabase.auth.signUp(opts),

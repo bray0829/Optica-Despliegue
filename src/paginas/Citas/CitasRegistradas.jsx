@@ -10,9 +10,8 @@ import "./style.css";
 
 const CitasRegistradas = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, perfil } = useAuth(); // 👈 usamos el perfil directamente del contexto
   const [citas, setCitas] = useState([]);
-  const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState("");
 
@@ -21,26 +20,9 @@ const CitasRegistradas = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedCancel, setSelectedCancel] = useState(null);
 
-  // Cargar perfil del usuario autenticado
+  // 🔹 Cargar citas (espera a tener usuario y perfil)
   useEffect(() => {
-    if (!user?.id) return;
-    let mounted = true;
-    const loadPerfil = async () => {
-      try {
-        const p = await usuariosService.getUsuarioById(user.id);
-        console.log("Perfil cargado:", p);
-        if (mounted) setPerfil(p);
-      } catch (err) {
-        console.error("Error cargando perfil:", err);
-      }
-    };
-    loadPerfil();
-    return () => { mounted = false; };
-  }, [user?.id]);
-
-  // Cargar citas (espera a tener perfil)
-  useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || !perfil?.rol) return;
     let mounted = true;
 
     const fetchCitas = async () => {
@@ -107,18 +89,16 @@ const CitasRegistradas = () => {
         });
 
         // 🔥 Mostrar TODAS las citas si el rol es "administrador"
-        let finalRows = enriched;
         const rol = String(perfil?.rol || "").toLowerCase();
+        let finalRows = [];
 
         if (rol === "administrador" || rol === "admin") {
           console.log("🔓 Administrador detectado: mostrando todas las citas");
-          finalRows = enriched; // sin filtro
+          finalRows = enriched;
         } else if (rol === "especialista") {
           const esp = await especialistasService.getEspecialistaByUsuarioId(user.id);
           if (esp?.id) {
             finalRows = enriched.filter(r => String(r.especialista_id) === String(esp.id));
-          } else {
-            finalRows = [];
           }
         } else if (rol === "paciente") {
           const { data: pacienteData } = await supabase
@@ -128,12 +108,9 @@ const CitasRegistradas = () => {
             .maybeSingle();
           if (pacienteData?.id) {
             finalRows = enriched.filter(r => String(r.paciente_id) === String(pacienteData.id));
-          } else {
-            finalRows = [];
           }
         } else {
-          console.warn("Rol no reconocido:", perfil?.rol);
-          finalRows = [];
+          console.warn("⚠️ Rol no reconocido:", perfil?.rol);
         }
 
         if (mounted) setCitas(finalRows);
@@ -148,13 +125,17 @@ const CitasRegistradas = () => {
     fetchCitas();
 
     return () => { mounted = false; };
-  }, [user?.id, perfil]);
+  }, [user?.id, perfil?.rol]);
 
-  // Filtro de búsqueda
+  // 🔍 Filtro de búsqueda
   const filtradas = citas.filter(c => {
     if (!filtro) return true;
     const b = filtro.toLowerCase();
-    return (c.doctor && c.doctor.toLowerCase().includes(b)) || (c.fecha && c.fecha.includes(b));
+    return (
+      (c.doctor && c.doctor.toLowerCase().includes(b)) ||
+      (c.fecha && c.fecha.includes(b)) ||
+      (c.paciente_nombre && c.paciente_nombre.toLowerCase().includes(b))
+    );
   });
 
   const handleView = (c) => { setDetailItem(c); setDetailOpen(true); };
@@ -192,7 +173,7 @@ const CitasRegistradas = () => {
       <div className="acciones-citas">
         <input
           className="input-busqueda"
-          placeholder="Buscar por fecha o doctor..."
+          placeholder="Buscar por paciente, fecha o doctor..."
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
         />
@@ -226,7 +207,9 @@ const CitasRegistradas = () => {
 
               <div className="acciones-card">
                 <button className="btn-ver" onClick={() => handleView(c)}>Ver</button>
-                {!isAdmin && <button className="btn-eliminar" onClick={() => handleCancel(c)}>Cancelar</button>}
+                {!isAdmin && (
+                  <button className="btn-eliminar" onClick={() => handleCancel(c)}>Cancelar</button>
+                )}
               </div>
             </div>
           ))}

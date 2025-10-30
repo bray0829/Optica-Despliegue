@@ -17,16 +17,18 @@
   width: 230px;
   background: var(--blanco);
   color: var(--azul-claro);
-  min-height: 100%;
   font-size: 1rem;
   box-shadow: 2px 0 18px rgba(46,92,154,0.10);
   display: flex;
   flex-direction: column;
   padding: 0;
   border-right: 2px solid var(--azul-borde);
-  position: relative;
+  position: fixed;       /* queda fijo a la izquierda */
+  top: 0;
+  left: 0;
+  height: 100vh;         /* ocupa toda la altura de la ventana */
+  overflow-y: auto;      /* scroll interno si hay mucho contenido */
   z-index: 2;
-  overflow: auto;
 }
 
 /* 🌙 Modo oscuro */
@@ -93,7 +95,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 1.2rem 1rem 1rem 1rem;
 }
 .sidebar ul {
@@ -119,28 +121,23 @@
   letter-spacing: 0.3px;
   transition: background 0.2s, color 0.2s;
 }
-
 [data-theme="dark"] .sidebar a {
   color: var(--texto-claro);
 }
-
 .sidebar a.active {
   background: var(--azul-suave);
   color: var(--azul-oscuro);
 }
-
 [data-theme="dark"] .sidebar a.active {
   background: #334155;
   color: #60a5fa;
 }
-
 .sidebar a:hover,
 .sidebar a:focus {
   background: #e3f0ff;
   color: var(--azul-oscuro);
   outline: none;
 }
-
 [data-theme="dark"] .sidebar a:hover {
   background: #334155;
   color: #93c5fd;
@@ -159,7 +156,6 @@
   width: 80%;
   align-self: center;
 }
-
 [data-theme="dark"] .sidebar-divider {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
@@ -211,23 +207,19 @@
   box-shadow: 0 2px 8px rgba(46,92,154,0.07);
   transition: background 0.2s, box-shadow 0.2s;
 }
-
 [data-theme="dark"] .sidebar-hamburger {
   background: #1e293b;
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #93c5fd;
 }
-
 .sidebar-hamburger:hover,
 .sidebar-hamburger:focus {
   background: #e3f0ff;
   box-shadow: 0 4px 12px rgba(46,92,154,0.13);
 }
-
 [data-theme="dark"] .sidebar-hamburger:hover {
   background: #334155;
 }
-
 .hamburger-icon {
   pointer-events: none;
 }

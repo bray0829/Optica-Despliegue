@@ -1,24 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Obtiene las variables desde el entorno
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim();
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+let supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+let supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Verifica si las variables están definidas
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error(
-    '[❌ SupabaseClient] Faltan las variables de entorno:',
-    !supabaseUrl ? 'VITE_SUPABASE_URL ' : '',
-    !supabaseAnonKey ? 'VITE_SUPABASE_ANON_KEY' : ''
-  );
-  console.warn(
-    '👉 En Netlify, agrégalas desde Site Settings → Build & Deploy → Environment → Add variable'
-  );
+// Limpia espacios si existen
+supabaseUrl = supabaseUrl?.trim();
+supabaseAnonKey = supabaseAnonKey?.trim();
+
+// Avisos pero sin romper la app
+if (!supabaseUrl) {
+  console.warn("⚠️ VITE_SUPABASE_URL no está definida.");
+}
+if (!supabaseAnonKey) {
+  console.warn("⚠️ VITE_SUPABASE_ANON_KEY no está definida.");
 }
 
-// Crea el cliente Supabase solo si hay configuración
-export const supabase = (supabaseUrl && supabaseAnonKey)
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+// ✅ SIEMPRE crea el cliente, como antes
+export const supabase = createClient(
+  supabaseUrl || "https://dummy.supabase.co",
+  supabaseAnonKey || "dummy-anon-key"
+);
 
 export default supabase;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../../../lib/supabaseClient';
-import '../../NuevoPaciente/style.css';
+import '../../Remisiones/NuevoRemision/style.css';
 
 const NuevoRemision = () => {
   const navigate = useNavigate();
@@ -22,9 +22,14 @@ const NuevoRemision = () => {
   useEffect(() => {
     const loadEspecialistas = async () => {
       try {
-        const { data, error } = await supabase.from('especialistas').select('id, usuario_id, usuarios (nombre)');
+        const { data, error } = await supabase
+          .from('especialistas')
+          .select('id, usuario_id, usuarios (nombre)');
         if (error) throw error;
-        const mapped = (data || []).map(e => ({ id: e.id, nombre: e.usuarios?.nombre || 'Sin nombre' }));
+        const mapped = (data || []).map(e => ({
+          id: e.id,
+          nombre: e.usuarios?.nombre || 'Sin nombre'
+        }));
         setEspecialistas(mapped);
       } catch (err) {
         console.error('Error cargando especialistas', err);
@@ -36,7 +41,11 @@ const NuevoRemision = () => {
   const fetchPacientes = async (q) => {
     if (!q) return setSuggestions([]);
     try {
-      const { data, error } = await supabase.from('pacientes').select('id, nombre, documento, telefono, fecha_nacimiento, usuario (email)').ilike('nombre', `%${q}%`).limit(10);
+      const { data, error } = await supabase
+        .from('pacientes')
+        .select('id, nombre, documento, telefono, fecha_nacimiento, usuario (email)')
+        .ilike('nombre', `%${q}%`)
+        .limit(10);
       if (error) throw error;
       setSuggestions(data || []);
     } catch (err) {
@@ -75,7 +84,7 @@ const NuevoRemision = () => {
           paciente_id: formData.pacienteId,
           especialista_id: formData.especialista,
           motivo: formData.motivo,
-          fecha: new Date().toISOString().slice(0,10),
+          fecha: new Date().toISOString().slice(0, 10),
           estado: 'pendiente',
         }
       ]);
@@ -113,7 +122,7 @@ const NuevoRemision = () => {
                 name="pacienteName"
                 value={formData.pacienteName}
                 onChange={(e) => { handleInputChange(e); fetchPacientes(e.target.value); }}
-                placeholder="Escribe el nombre del paciente"
+                placeholder="Ejemplo: Juan Pérez"
               />
               <button type="button" className="search-button" onClick={() => fetchPacientes(formData.pacienteName)}>Buscar</button>
             </div>
@@ -133,29 +142,34 @@ const NuevoRemision = () => {
             <div className="form-row">
               <div className="form-group">
                 <label>Nombre completo</label>
-                <input type="text" value={formData.pacienteName} disabled />
+                <input type="text" value={formData.pacienteName} placeholder="Ejemplo: Juan Pérez" disabled />
               </div>
               <div className="form-group">
                 <label>Fecha de nacimiento</label>
-                <input type="date" value={formData.fechaNacimiento} disabled />
+                <input type="date" value={formData.fechaNacimiento} placeholder="AAAA-MM-DD" disabled />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label>Correo</label>
-                <input type="email" value={formData.correo} disabled />
+                <input type="email" value={formData.correo} placeholder="Ejemplo: juanperez@gmail.com" disabled />
               </div>
               <div className="form-group">
                 <label>Teléfono</label>
-                <input type="tel" value={formData.telefono} disabled />
+                <input type="tel" value={formData.telefono} placeholder="Ejemplo: 3201234567" disabled />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label>Especialista</label>
-                <select name="especialista" value={formData.especialista} onChange={handleInputChange} required>
+                <select
+                  name="especialista"
+                  value={formData.especialista}
+                  onChange={handleInputChange}
+                  required
+                >
                   <option value="">Selecciona un especialista</option>
                   {especialistas.map(e => (
                     <option key={e.id} value={e.id}>{e.nombre}</option>
@@ -164,14 +178,25 @@ const NuevoRemision = () => {
               </div>
               <div className="form-group">
                 <label>Motivo</label>
-                <textarea name="motivo" value={formData.motivo} onChange={handleInputChange} rows="3" required />
+                <textarea
+                  name="motivo"
+                  value={formData.motivo}
+                  onChange={handleInputChange}
+                  rows="3"
+                  placeholder="Ejemplo: Remitir paciente para valoración oftalmológica"
+                  required
+                />
               </div>
             </div>
           </section>
 
           <div className="actions-row">
-            <button type="submit" className="submit-button" disabled={loading}>{loading ? 'Guardando...' : 'Guardar Remisión'}</button>
-            <button type="button" className="cancel-button" onClick={() => navigate('/remisiones')}>Cancelar</button>
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? 'Guardando...' : 'Guardar Remisión'}
+            </button>
+            <button type="button" className="cancel-button" onClick={() => navigate('/remisiones')}>
+              Cancelar
+            </button>
           </div>
         </form>
       </div>

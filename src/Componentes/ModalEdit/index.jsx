@@ -51,7 +51,6 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
       const payload = {};
       for (const key in form) {
         if (!nonEditable.includes(key) && form[key] !== undefined) {
-          // Si el campo tiene un alias, usamos el nombre real
           const realKey = fieldMap[key] || key;
           payload[realKey] = form[key];
         }
@@ -59,13 +58,7 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
 
       // ❌ Eliminar cualquier campo inválido
       Object.keys(payload).forEach((key) => {
-        if (![
-          'fecha',
-          'notas',
-          'motivo',
-          'estado',
-          'pdf_path'
-        ].includes(key)) {
+        if (!['fecha', 'notas', 'motivo', 'estado', 'pdf_path'].includes(key)) {
           delete payload[key];
         }
       });
@@ -130,20 +123,40 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
                 'created_at',
                 'updated_at'
               ].includes(f);
+
               return (
                 <div key={f} className="modal-field">
                   <label htmlFor={f}>
                     {f.charAt(0).toUpperCase() + f.slice(1).replace(/([A-Z])/g, ' $1')}
                   </label>
-                  <input
-                    id={f}
-                    name={f}
-                    value={form[f] ?? ''}
-                    onChange={handleChange}
-                    disabled={isDisabled}
-                    className={isDisabled ? 'disabled-field' : ''}
-                    placeholder={isDisabled ? 'Campo no editable' : ''}
-                  />
+
+                  {/* 🔽 Si el campo es "estado", mostramos un menú desplegable */}
+                  {f === 'estado' ? (
+                    <select
+                      id={f}
+                      name={f}
+                      value={form[f] ?? ''}
+                      onChange={handleChange}
+                      disabled={isDisabled}
+                      className={isDisabled ? 'disabled-field' : ''}
+                    >
+                      <option value="">Seleccionar estado</option>
+                      <option value="pendiente">Pendiente</option>
+                      <option value="en proceso">En proceso</option>
+                      <option value="resuelta">Resuelta</option>
+                      <option value="finalizada">Finalizada</option>
+                    </select>
+                  ) : (
+                    <input
+                      id={f}
+                      name={f}
+                      value={form[f] ?? ''}
+                      onChange={handleChange}
+                      disabled={isDisabled}
+                      className={isDisabled ? 'disabled-field' : ''}
+                      placeholder={isDisabled ? 'Campo no editable' : ''}
+                    />
+                  )}
                 </div>
               );
             })

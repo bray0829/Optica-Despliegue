@@ -31,15 +31,31 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
         return;
       }
 
-      // ✅ Solo guardamos campos editables
-      const nonEditable = ['usuario_id', 'paciente_id', 'especialista_id', 'id'];
-      const payload = {};
+      // 🚫 Campos no editables
+      const nonEditable = [
+        'id',
+        'usuario_id',
+        'paciente_id',
+        'especialista_id',
+        'created_at',
+        'updated_at'
+      ];
 
-      for (const key of fields) {
-        if (!nonEditable.includes(key)) {
+      // ✅ Generar payload con solo columnas válidas
+      const payload = {};
+      for (const key in form) {
+        if (
+          !nonEditable.includes(key) &&
+          form[key] !== undefined &&
+          form[key] !== null
+        ) {
           payload[key] = form[key];
         }
       }
+
+      // ⚙️ Si se filtraron campos de visualización, se eliminan también
+      delete payload.paciente;
+      delete payload.especialista;
 
       if (Object.keys(payload).length === 0) {
         alert("No hay campos editables para guardar.");
@@ -93,7 +109,14 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
             <p>No hay campos configurados para editar.</p>
           ) : (
             fields.map((f) => {
-              const isDisabled = ['usuario_id', 'paciente_id', 'especialista_id', 'id'].includes(f);
+              const isDisabled = [
+                'id',
+                'usuario_id',
+                'paciente_id',
+                'especialista_id',
+                'created_at',
+                'updated_at'
+              ].includes(f);
               return (
                 <div key={f} className="modal-field">
                   <label htmlFor={f}>

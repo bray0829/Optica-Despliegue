@@ -1,3 +1,4 @@
+/* === MODAL GENERAL === */
 .modal-edit-backdrop {
   position: fixed;
   inset: 0;
@@ -7,25 +8,34 @@
   justify-content: center;
   z-index: 9999;
   backdrop-filter: blur(4px);
+  font-family: 'Poppins', sans-serif;
 }
 
 .modal-edit {
   background: #fff;
   width: 520px;
   max-width: calc(100% - 32px);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 }
 
+/* === HEADER === */
 .modal-edit-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
   border-bottom: 1px solid #eee;
+  background: #f9fafb;
 }
 
+.modal-edit-header h3 {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* === BODY === */
 .modal-edit-body {
   padding: 16px;
   max-height: 60vh;
@@ -40,67 +50,83 @@
   display: block;
   font-size: 13px;
   margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
 }
 
 .modal-field input,
-.modal-field textarea {
+.modal-field textarea,
+.modal-field select {
   width: 100%;
   box-sizing: border-box;
   padding: 8px 10px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
+  font-family: 'Poppins', sans-serif;
 }
 
+/* === FOOTER === */
 .modal-edit-footer {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   padding: 12px 16px;
   border-top: 1px solid #eee;
   justify-content: flex-end;
 }
 
+/* === BOTONES === */
 .btn {
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
+  font-family: 'Poppins', sans-serif;
   transition: all 0.2s;
+  border: none;
 }
 
+/* ✅ Guardar */
 .btn-primary {
   background: #2563eb;
   color: #fff;
-  border: none;
 }
 .btn-primary:hover {
   background: #1d4ed8;
+  transform: scale(1.03);
 }
 
+/* ⚪ Cancelar */
 .btn-secondary {
   background: #f3f4f6;
-  border: 1px solid #e5e7eb;
+  color: #111827;
+  border: 1px solid #d1d5db;
 }
 .btn-secondary:hover {
   background: #e5e7eb;
+  transform: scale(1.03);
 }
 
-.btn-danger {
-  background: #dc2626;
-  color: #fff;
-  border: none;
-}
-.btn-danger:hover {
-  background: #b91c1c;
-}
-
+/* 🟡 Restaurar */
 .btn-restore {
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
+  background: #facc15;
+  color: #111827;
 }
 .btn-restore:hover {
-  background: #e5e7eb;
+  background: #eab308;
+  transform: scale(1.03);
 }
 
+/* 🔴 Eliminar */
+.btn-danger {
+  background: #ef4444;
+  color: #fff;
+}
+.btn-danger:hover {
+  background: #dc2626;
+  transform: scale(1.03);
+}
+
+/* ❌ Cerrar (X) */
 .modal-close {
   background: transparent;
   border: none;
@@ -108,12 +134,14 @@
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
+  color: #6b7280;
 }
 .modal-close:hover {
   background: #f3f4f6;
+  color: #111827;
 }
 
-/* 🔒 Campos deshabilitados (no editables) */
+/* 🔒 Campos deshabilitados */
 .disabled-field {
   background-color: #f9fafb;
   color: #6b7280;

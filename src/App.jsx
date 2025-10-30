@@ -22,7 +22,8 @@ import ResetPassword from "./paginas/ResetPassword";
 import ResetSuccess from "./paginas/ResetPassword/success";
 import AdminUsers from "./paginas/Admin/Users";
 
-import PrivateRoute from "./Componentes/PrivateRoute";
+import PrivateRoute from "./Componentes/PrivateRoute.jsx";
+
 import AdminRoute from "./Componentes/AdminRoute";
 
 import FloatingSettingsBubble from "./Componentes/FloatingSettingsBubble/FloatingSettingsBubble";

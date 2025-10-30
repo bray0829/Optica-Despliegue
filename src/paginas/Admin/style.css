@@ -1,0 +1,163 @@
+.admin-users-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.admin-card {
+  width: 650px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-3px);
+}
+
+.admin-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.form-info {
+  background: #e0f2fe;
+  color: #075985;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.form-row {
+  display: flex;
+  gap: 8px;
+}
+
+.create-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.create-btn:hover {
+  background: #1d4ed8;
+}
+
+.divider {
+  margin: 25px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+.list-title {
+  font-size: 1.2rem;
+  color: #1e293b;
+  font-weight: 500;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.user-item:hover {
+  background: #f1f5f9;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.role-select {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: white;
+}
+
+/* New: avatar and responsive tweaks */
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: linear-gradient(135deg,#e0f2fe,#bfdbfe);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.admin-card { max-width: 900px; width: 100%; }
+.admin-users-page { padding: 40px 20px; }
+
+@media(max-width:800px){
+  .admin-card { padding: 20px }
+  .form-row { flex-direction: column }
+  .form-row .form-input { width: 100% }
+}
+
+.empty-text {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+}

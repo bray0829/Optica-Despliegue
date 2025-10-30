@@ -1,0 +1,35 @@
+.encontrar-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.niveles .nivel {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #e6eefc;
+  background: #f8fafc;
+  cursor: pointer;
+}
+.niveles .nivel.activo { background: #6366f1; color: white; }
+
+.estado { margin-left: auto; display:flex; gap:1rem; align-items:center; }
+.acciones .btn { padding:0.5rem 0.9rem; background:#3b82f6; color:white; border-radius:8px; border:none; cursor:pointer }
+
+.grid-area { background: #fff; padding: 1rem; border-radius: 10px; border: 1px solid #e6edf8; }
+.placeholder { padding:2rem; text-align:center; color:#6b7280 }
+
+.grid { display:grid; gap:8px; }
+.cell { background:#f1f5f9; border:none; padding:1rem; min-height:56px; border-radius:8px; font-weight:700; cursor:pointer }
+.cell.empty { background:#fff3cd; }
+.cell.target { outline: 2px dashed rgba(99,102,241,0.2); }
+
+.resultado { margin-top:1rem; padding:1rem; background:#f8fafc; border-radius:8px; }

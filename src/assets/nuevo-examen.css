@@ -1,0 +1,236 @@
+/* NuevoExamen styles - Responsive and centered layout */
+
+:root {
+  --bg: #f4f9ff;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2b7bff;
+  --accent-600: #2a6ef3;
+}
+
+.nuevo-examen-outer {
+  min-height: 90vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center; /* centra verticalmente */
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* Card principal */
+.nuevo-examen-card {
+  width: 90%;
+  max-width: 720px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px 24px; /* 👇 Ajusta el alto interno del card (menos padding = más corto) */
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  position: relative;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Header */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px; /* 👇 Reduce espacio bajo el título */
+}
+.header-container h2 {
+  font-size: 24px;
+  color: var(--accent-600);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Botón de volver */
+.back-button {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: none;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 22px rgba(41, 65, 110, 0.08);
+  cursor: pointer;
+  z-index: 20;
+}
+
+/* Estructura del formulario */
+.form-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 👇 Reduce la distancia vertical entre campos */
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* 👇 Reduce espacio entre columnas */
+  width: 100%;
+}
+
+.form-group {
+  flex: 1 1 48%;
+  min-width: 260px;
+}
+
+/* Inputs y labels */
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px; /* 👇 Reduce espacio entre label e input */
+}
+
+input[type=text],
+input[type=date],
+input[type=file],
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px; /* 👇 Menos padding interno = menos alto */
+  border-radius: 8px;
+  border: 1px solid #eef3fb;
+  background: var(--card);
+  font-size: 14px;
+  height: 40px; /* 👇 Reduce altura de inputs */
+}
+
+  /* style selects to match other inputs */
+  .form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #eef3fb;
+    background: var(--card);
+    font-size: 14px;
+    height: 44px;
+    appearance: none; /* remove native arrow in some browsers */
+  }
+
+textarea {
+  min-height: 80px; /* 👇 Reduce altura del campo grande */
+  resize: vertical;
+  padding: 10px 12px;
+}
+
+/* Autocomplete */
+.autocomplete {
+  position: relative;
+}
+.suggestions-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border: 1px solid #eef3fb;
+  border-radius: 8px;
+  padding: 6px 0;
+  z-index: 50;
+  max-height: 220px;
+  overflow: auto;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+}
+.suggestions-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.suggestions-list li:hover {
+  background: #f7fbff;
+}
+
+/* Subida de archivos */
+.upload-progress {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Errores */
+.form-error {
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff4f4;
+  border: 1px solid #ffd6d6;
+  color: #7b1111;
+  margin-bottom: 10px;
+}
+
+/* Botón de enviar */
+.submit-button {
+  display: block;
+  margin: 14px auto 0; /* 👇 Reduce separación antes del botón */
+  padding: 10px 16px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-600));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(43, 123, 255, 0.18);
+  max-width: 360px;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Botón secundario */
+.secondary-button {
+  background: #f3f7ff;
+  border: 1px solid #e6f0ff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 900px) {
+  .nuevo-examen-card {
+    width: 95%;
+    padding: 16px; /* 👇 Ajusta para pantallas pequeñas */
+  }
+  .form-row {
+    flex-direction: column;
+  }
+  .form-group {
+    flex: 1 1 100%;
+  }
+  .header-container h2 {
+    font-size: 20px;
+  }
+  .submit-button {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .nuevo-examen-card {
+    padding: 12px;
+  }
+  input[type=text],
+  input[type=date],
+  textarea {
+    padding: 8px;
+  }
+  .header-container h2 {
+    font-size: 18px;
+  }
+}

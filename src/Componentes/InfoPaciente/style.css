@@ -1,0 +1,23 @@
+.paciente-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.paciente-card:hover {
+  transform: translateY(-4px);
+}
+
+.paciente-card h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.paciente-card p {
+  margin: 4px 0;
+  color: #666;
+}

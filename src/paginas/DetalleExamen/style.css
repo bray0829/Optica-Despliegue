@@ -1,0 +1,244 @@
+/* Estilos para Detalle del Examen (limpios y semánticos) */
+.detalle-examen-container {
+  background-color: #f5f8ff;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden; /* evita scroll horizontal */
+  position: relative; /* contenedor de referencia para volver-btn */
+}
+
+.titulo {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 1rem 0;
+}
+
+/* Botón volver en flujo, centrado y accesible */
+.volver-btn {
+  position: absolute; /* posicionamos respecto al layout-content */
+  right: 4rem; /* suficiente para no solapar el sidebar y estar dentro del contenido */
+  top: 1.25rem;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 50;
+}
+
+@media (max-width: 760px) {
+  .volver-btn {
+    position: static;
+    align-self: center;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* GRID PRINCIPAL: permite wrap para evitar que las tarjetas se amontonen */
+.detalle-grid {
+  display: flex;
+  flex-wrap: wrap; /* permite que las tarjetas bajen a la siguiente fila */
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Más espacio entre secciones */
+.detalle-grid > .card {
+  padding: 1.25rem 1.5rem;
+}
+
+/* Contenedor independiente de multimedia */
+.multimedia-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 1.5rem auto 2rem auto;
+  background: transparent;
+}
+.multimedia-grid {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.multimedia-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: white;
+  padding: 0.75rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+}
+.archivo-preview-large {
+  width: 88px;
+  height: 88px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.archivo-preview-large img { max-width: 80%; max-height: 80%; object-fit: contain; }
+.file-meta { display: flex; flex-direction: column; gap: 0.25rem; }
+.file-name { font-weight: 600; color: #0f172a; }
+.file-type { font-size: 0.8rem; padding: 0.18rem 0.45rem; border-radius: 6px; display: inline-block; }
+.file-type-pdf { background: #ffeaea; color: #b91c1c; }
+.file-type-img { background: #eefbf6; color: #047857; }
+
+/* Tarjetas */
+.card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.25rem;
+  flex: 1 1 32%; /* base para 3 columnas, pero flexible */
+  min-width: 260px; /* evita que el contenido colapse */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative; /* para z-index */
+  z-index: 0;
+}
+
+.card h2 {
+  color: #1e3a8a;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.35rem;
+  margin: 0 0 0.6rem 0;
+  text-align: center;
+}
+
+.info-card p,
+.card p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+/* Diagnóstico */
+.diagnostico-grid {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.diagnostico-item {
+  background-color: #f8fafc;
+  border-radius: 10px;
+  padding: 0.7rem;
+  flex: 1;
+  min-width: 140px;
+}
+
+.diagnostico-item h3 {
+  color: #1d4ed8;
+  margin-bottom: 0.45rem;
+  font-size: 0.98rem;
+}
+
+.diagnostico-item p {
+  margin: 0.18rem 0;
+  font-size: 0.9rem;
+}
+
+/* Notas */
+.nota-texto {
+  background-color: #f1f5f9;
+  padding: 0.7rem;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* Archivos: layout más compacto y claro */
+.archivos-card {
+  margin-top: 0.6rem;
+}
+.archivos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.archivo-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.archivo-preview {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  overflow: hidden; /* evita que la imagen sobresalga */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.download-btn {
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Asegurar que las imágenes dentro del preview no crezcan desproporcionadas */
+.archivo-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+}
+
+/* Forzar que las cards actúen como contenedores (z-index) */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Puntos de quiebre: 3 columnas -> 2 columnas -> 1 columna */
+@media (max-width: 1100px) {
+  .card {
+    flex: 1 1 48%;
+  }
+}
+
+@media (max-width: 760px) {
+  .titulo {
+    font-size: 1.4rem;
+  }
+  .detalle-grid {
+    gap: 1rem;
+  }
+  .card {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .diagnostico-grid {
+    flex-direction: column;
+  }
+}

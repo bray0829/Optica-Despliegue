@@ -1,0 +1,114 @@
+/* Citas styles aligned with nuevo-examen.css variables */
+
+:root{
+  --bg: #f4f9ff;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2b7bff;
+  --accent-600: #2a6ef3;
+}
+
+.citas {
+  max-width: 960px;
+  margin: 18px auto;
+  padding: 22px;
+  background: transparent;
+  text-align: left;
+}
+
+.citas header h2,
+.citas h2 {
+  font-size: 24px;
+  color: var(--accent-600);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.citas p {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.citas-center { display:flex; justify-content:center; gap:28px; align-items:center; height:60vh; }
+.big-btn { background:var(--accent); color:#fff; border:none; padding:18px 22px; border-radius:12px; font-size:1.05rem; cursor:pointer; box-shadow:0 10px 26px rgba(43,123,255,0.14); transition:transform .12s ease, background .12s ease; }
+.big-btn:hover { transform:translateY(-3px); background:var(--accent-600); }
+
+/* === Acciones === */
+.acciones-citas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.input-busqueda {
+  padding: 10px 12px;
+  border: 1px solid #eef3fb;
+  border-radius: 10px;
+  width: 280px;
+  background-color: var(--card);
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+}
+
+.boton-nuevo {
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(43,123,255,0.14);
+  cursor: pointer;
+  transition: transform 0.12s ease, background .12s ease;
+}
+.boton-nuevo:hover { transform: translateY(-3px); background: var(--accent-600); }
+
+/* === Cards === */
+.grid-citas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card-cita {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(15,23,42,0.06);
+  transition: transform 0.16s ease;
+}
+.card-cita:hover { transform: translateY(-6px); }
+.card-cita h3 { color: var(--accent-600); font-weight:700; margin-bottom:6px }
+.card-title { font-size: 20px; color: var(--accent-600); margin: 0 0 6px 0; font-weight:700; line-height:1.05 }
+.card-subtitle { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:14px; margin-bottom:8px }
+.card-subtitle .fecha { font-weight:600 }
+.card-subtitle .doctor-name { font-weight:500; color: #374151 }
+.card-subtitle .dot { color: var(--muted); margin: 0 6px }
+.card-meta { display:flex; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:13px }
+.card-meta .hora, .card-meta .motivo { color:var(--muted) }
+.card-cita p { color: var(--muted); margin: 0.25rem 0 }
+
+.acciones-card { display:flex; justify-content:flex-end; gap:10px; margin-top:12px }
+.btn-ver, .btn-eliminar { border:none; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700 }
+.btn-ver { background: #f3f7ff; color: var(--accent-600); box-shadow: 0 6px 18px rgba(43,123,255,0.06) }
+.btn-eliminar { background: #fff6f6; color: #b91c1c }
+.btn-ver:hover { background:#e9f2ff }
+.btn-eliminar:hover { background:#ffecec }
+
+.sin-datos-card { text-align:center; color:var(--muted); background:#f9fafb; padding:18px; border-radius:10px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.03) }
+
+/* === Paginación === */
+.paginacion { display:flex; justify-content:center; align-items:center; gap:0.8rem; margin-top:1.6rem }
+.paginacion button { background:var(--accent); color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer }
+.paginacion button:hover { background:var(--accent-600) }
+.paginacion span { font-weight:600; color:var(--accent-600) }
+
+@media(max-width:900px){
+  .citas { padding: 14px }
+  .input-busqueda { width:100% }
+  .acciones-citas { flex-direction:column; align-items:stretch }
+}
+

@@ -1,0 +1,26 @@
+.footer {
+  width: 100%;                 /* ocupa todo el ancho */
+  background-color: #222;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  margin-top: auto;             /* empuja el footer hacia abajo */
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  width: 100%;                  /* que el contenido también se expanda */
+}
+
+.footer h4 {
+  margin-bottom: 8px;
+  color: #00bcd4;
+}
+
+.footer-copy {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}

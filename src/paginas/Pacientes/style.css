@@ -1,0 +1,174 @@
+/* === Nueva interfaz Pacientes === */
+.acciones-pacientes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.input-busqueda {
+  padding: 0.6rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  width: 250px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.botones-filtro {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.boton-filtro {
+  background-color: #e0e7ff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #1e3a8a;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-filtro:hover {
+  background-color: #c7d2fe;
+}
+
+.boton-filtro.activo {
+  background-color: #1e3a8a;
+  color: white;
+}
+
+.boton-nuevo {
+  background-color: #1e3a8a;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.boton-nuevo:hover {
+  transform: translateY(-2px);
+  background-color: #1c3578;
+}
+
+/* === Cards === */
+.grid-pacientes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card-paciente {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.card-paciente:hover {
+  transform: translateY(-3px);
+}
+
+.card-paciente h3 {
+  color: #1e3a8a;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.card-paciente p {
+  color: #555;
+  margin: 0.3rem 0;
+}
+
+/* Unified card title/subtitle/meta used across pages */
+.card-title { font-size: 20px; color: #1e3a8a; margin: 0 0 6px 0; font-weight:700; line-height:1.05 }
+.card-subtitle { display:flex; align-items:center; gap:8px; color:#6b7280; font-size:14px; margin-bottom:8px }
+.card-subtitle .doc { font-weight:600 }
+.card-subtitle .phone { font-weight:500; color:#374151 }
+.card-subtitle .dot { color:#6b7280; margin: 0 6px }
+.card-meta { display:flex; gap:12px; flex-wrap:wrap; color:#6b7280; font-size:13px }
+.card-meta .nacimiento, .card-meta .direccion { color:#6b7280 }
+
+.acciones-card {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn-ver,
+.btn-editar,
+.btn-eliminar {
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-ver {
+  background-color: #e0e7ff;
+  color: #1e3a8a;
+}
+
+.btn-editar {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.btn-eliminar {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-ver:hover { background-color: #c7d2fe; }
+.btn-editar:hover { background-color: #fde68a; }
+.btn-eliminar:hover { background-color: #fca5a5; }
+
+/* === Sin datos === */
+.sin-datos-card {
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* === Paginación === */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.paginacion button {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.paginacion button:hover {
+  background-color: #1c3578;
+}
+
+.paginacion span {
+  font-weight: 600;
+  color: #1e3a8a;
+}

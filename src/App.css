@@ -1,0 +1,128 @@
+/* ==== Reset básico ==== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* ==== Contenedor principal ==== */
+.App {
+  min-height: 100vh;     /* que ocupe toda la pantalla */
+  display: flex;
+  flex-direction: column; /* navbar arriba, main en medio, footer abajo */
+}
+
+/* ==== Navbar ==== */
+.navbar {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 1rem 2rem;
+}
+
+/* ==== Contenido principal ==== */
+main {
+  flex: 1; /* ocupa el espacio restante */
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==== Footer ==== */
+.footer {
+  width: 100%;
+  background-color: #222;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  margin-top: auto; /* empuja el footer al final */
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.footer h4 {
+  margin-bottom: 8px;
+  color: #00bcd4;
+}
+
+.footer-copy {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* ==== Variables globales ==== */
+:root {
+  --font-size: medium;
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* ==== Tamaños de texto ajustados ==== */
+:root[data-font-size="small"] {
+  --font-size: 16px; /* Igual al tamaño mediano actual */
+}
+
+:root[data-font-size="medium"] {
+  --font-size: 20px; /* Aumentado */
+}
+
+:root[data-font-size="large"] {
+  --font-size: 24px; /* Aumentado */
+}
+
+/* ==== Tema Claro ==== */
+:root[data-theme="light"] {
+  --background-color: #f3f4f6;
+  --text-color: #111827;
+  --navbar-color: #1e3a8a;
+  --footer-color: #222;
+  --footer-text-color: #fff;
+}
+
+/* ==== Tema Oscuro ==== */
+:root[data-theme="dark"] {
+  --background-color: #111827;
+  --text-color: #f3f4f6;
+  --navbar-color: #374151;
+  --footer-color: #1e293b;
+  --footer-text-color: #e5e7eb;
+}
+
+html, body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.navbar {
+  background-color: var(--navbar-color);
+  color: var(--text-color);
+}
+
+.footer {
+  background-color: var(--footer-color);
+  color: var(--footer-text-color);
+}
+
+/* ==== Ajuste para asegurar que los estilos se apliquen correctamente ==== */
+html[data-theme="light"] {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}

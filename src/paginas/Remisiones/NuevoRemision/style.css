@@ -1,0 +1,239 @@
+/* Nueva Remisión - Estilo visual igual a Nuevo Examen */
+
+:root {
+  --bg: #f4f9ff;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2b7bff;
+  --accent-600: #2a6ef3;
+}
+
+.nuevo-paciente-container {
+  min-height: 90vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.card-wrap {
+  width: 90%;
+  max-width: 720px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  position: relative;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Botón de volver */
+.back-inline {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: none;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 22px rgba(41, 65, 110, 0.08);
+  cursor: pointer;
+  z-index: 20;
+  font-weight: 700;
+}
+.back-inline:hover { transform: translateY(-2px); }
+
+/* Títulos */
+.main-title {
+  font-size: 24px;
+  color: var(--accent-600);
+  font-weight: 700;
+  margin: 0;
+}
+.subtitle {
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+/* Secciones */
+.section {
+  margin-top: 20px;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-600);
+  margin-bottom: 10px;
+}
+
+/* Formulario */
+.paciente-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.form-group {
+  flex: 1 1 48%;
+  min-width: 260px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+input[type=text],
+input[type=email],
+input[type=tel],
+input[type=date],
+textarea,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #eef3fb;
+  background: var(--card);
+  font-size: 14px;
+  height: 40px;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+  padding: 10px 12px;
+}
+
+/* Autocompletado */
+.search-input {
+  position: relative;
+  display: flex;
+  gap: 10px;
+}
+.search-input input {
+  flex: 1;
+}
+.search-button {
+  background: #f3f7ff;
+  border: 1px solid #e6f0ff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.suggestions-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border: 1px solid #eef3fb;
+  border-radius: 8px;
+  padding: 6px 0;
+  z-index: 50;
+  max-height: 220px;
+  overflow: auto;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+}
+.suggestions-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.suggestions-list li:hover {
+  background: #f7fbff;
+}
+
+/* Errores */
+.form-error {
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff4f4;
+  border: 1px solid #ffd6d6;
+  color: #7b1111;
+  margin-bottom: 10px;
+}
+
+/* Botones inferiores */
+.actions-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.submit-button {
+  padding: 10px 16px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-600));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 360px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(43, 123, 255, 0.18);
+}
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.cancel-button {
+  background: #f3f7ff;
+  border: 1px solid #e6f0ff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .card-wrap {
+    width: 95%;
+    padding: 16px;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+  .form-group {
+    flex: 1 1 100%;
+  }
+  .main-title {
+    font-size: 20px;
+  }
+}
+@media (max-width: 480px) {
+  .card-wrap {
+    padding: 12px;
+  }
+  input[type=text],
+  input[type=email],
+  input[type=tel],
+  input[type=date],
+  textarea {
+    padding: 8px;
+  }
+  .main-title {
+    font-size: 18px;
+  }
+}

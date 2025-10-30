@@ -1,0 +1,47 @@
+/* Paleta de azules y blanco */
+:root {
+  --azul-oscuro: #0a2342;
+  --azul-claro: #2563eb;
+  --azul-medio: #1e40af;
+  --azul-suave: #e3f0ff;
+  --azul-card: #f5faff;
+  --azul-borde: rgba(46,92,154,0.06);
+  --blanco: #fff;
+  --gris-claro: #f3f4f6;
+}
+
+.layout-base {
+  display: flex;
+  min-height: 100vh;
+  height: 100vh;
+  background: linear-gradient(120deg, var(--azul-suave) 0%, var(--blanco) 100%);
+  overflow: hidden;
+}
+
+.layout-content {
+  flex: 1;
+  padding: 1.2rem 0.7rem;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  min-height: 0;
+  /* allow the content to grow naturally and avoid nested full-viewport scrolling */
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.card {
+  background: var(--blanco);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(46,92,154,0.10);
+  border: 2px solid var(--azul-suave);
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 920px;
+  width: 100%;
+}

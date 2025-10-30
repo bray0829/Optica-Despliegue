@@ -1,0 +1,16 @@
+/* Estilos globales para formularios */
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+  color: #000000 !important;
+}
+
+/* Asegurar que el texto del placeholder sea más claro */
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important;
+}

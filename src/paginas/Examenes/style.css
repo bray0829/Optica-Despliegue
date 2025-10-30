@@ -1,0 +1,313 @@
+/* === Examenes Moderno === */
+.examenes {
+  padding: 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.header h2 {
+  font-size: 1.75rem;
+  color: #1e3a8a;
+  margin-bottom: 0.5rem;
+}
+
+.descripcion {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* === Acciones === */
+.acciones-examenes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.input-busqueda {
+  padding: 0.6rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  width: 260px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.boton-nuevo {
+  background-color: #1e3a8a;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.boton-nuevo:hover {
+  background-color: #1c3578;
+  transform: translateY(-2px);
+}
+
+/* === Cards === */
+.grid-examenes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 1.5rem;
+}
+
+.card-examen {
+  background-color: var(--color-bg-secondary);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.card-examen:hover {
+  transform: translateY(-3px);
+}
+
+.card-examen h3 {
+  color: var(--color-accent);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.card-examen p {
+  color: var(--color-text-primary);
+  margin: 0.3rem 0;
+}
+
+/* Unified card title/subtitle/meta used across pages */
+.card-title { font-size: 20px; color: #1e3a8a; margin: 0 0 6px 0; font-weight:700; line-height:1.05 }
+.card-subtitle { display:flex; align-items:center; gap:8px; color:#6b7280; font-size:14px; margin-bottom:8px }
+.card-subtitle .fecha { font-weight:600 }
+.card-meta { display:flex; gap:12px; flex-wrap:wrap; color:#6b7280; font-size:13px }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-header h3 {
+  color: #1e3a8a;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.card-header .fecha {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.card-body p {
+  color: #374151;
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+}
+
+/* Prevent long filenames or continuous text from overflowing the card */
+.card-examen, .card-examen * { box-sizing: border-box; }
+.card-examen .card-body {
+  /* allow long words (file paths) to wrap and avoid overflow */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Ensure action buttons don't overlap content on small cards */
+.card-examen .acciones-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Force light background for cards site-wide as a safer fallback (higher specificity) */
+.examenes .grid-examenes .card-examen,
+.examenes .card-examen {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+}
+
+
+.acciones-card {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn-ver,
+.btn-editar,
+.btn-eliminar {
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-ver {
+  background-color: #e0e7ff;
+  color: #1e3a8a;
+}
+
+.btn-editar {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.btn-eliminar {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-ver:hover { background-color: #c7d2fe; }
+.btn-editar:hover { background-color: #fde68a; }
+.btn-eliminar:hover { background-color: #fca5a5; }
+
+/* === Sin datos === */
+.sin-datos-card {
+  text-align: center;
+  color: #6b7280;
+  background: var(--color-bg-secondary);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* === Paginación === */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.paginacion button {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.paginacion button:hover {
+  background-color: #1c3578;
+}
+
+.paginacion span {
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+/* ==================================================== */
+/* Dark-mode force overrides specific to Examenes page */
+/* Ensures every .card-examen inside the grid uses the dark variables */
+html[data-theme="dark"] .grid-examenes .card-examen {
+  background-color: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid rgba(233, 221, 221, 0.06) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Make sure header text and body text inside cards are visible */
+html[data-theme="dark"] .grid-examenes .card-examen h3,
+html[data-theme="dark"] .grid-examenes .card-examen p,
+html[data-theme="dark"] .grid-examenes .card-examen .fecha {
+  color: var(--color-text-primary) !important;
+}
+
+/* If any card uses an inline background or a stronger selector, also target
+   direct style attribute as last resort (this is rare but avoids flicker). */
+html[data-theme="dark"] .grid-examenes .card-examen[style] {
+  background-color: var(--color-bg-secondary) !important;
+}
+
+/* ==================================================== */
+/* DEBUG: force show "+ Nuevo Examen" button (temporary) */
+/* If this makes the button appear, the issue was CSS hiding it. */
+.examenes .boton-nuevo {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 9999 !important;
+}
+
+/* Also ensure acciones-examenes doesn't collapse or push the button off-screen */
+.examenes .acciones-examenes {
+  align-items: center;
+}
+
+
+
+/* ==================================================== */
+/* Dark mode overrides for Examenes (force variables) */
+/* ==================================================== */
+/* Scope these overrides under the html[data-theme="dark"] selector so
+   they only apply when dark mode is active. We avoid changing button
+   colors (they keep their existing styles) */
+html[data-theme="dark"] .examenes {
+  background-color: var(--color-bg-primary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+html[data-theme="dark"] .examenes .header,
+html[data-theme="dark"] .examenes .header h2,
+html[data-theme="dark"] .examenes .descripcion {
+  background-color: transparent;
+  color: var(--color-text-primary) !important;
+}
+
+/* Force cards to use the dark variables (but keep their shape/shadow) */
+html[data-theme="dark"] .card-examen {
+  background-color: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+html[data-theme="dark"] .card-examen h3,
+html[data-theme="dark"] .card-examen p,
+html[data-theme="dark"] .card-examen .fecha,
+html[data-theme="dark"] .card-examen .card-body p {
+  color: var(--color-text-primary) !important;
+}
+
+/* Ensure the input search box becomes light-on-dark (keeps usability) */
+html[data-theme="dark"] .examenes .input-busqueda {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Force light cards on Examenes page even if dark theme is active.
+   This ensures exam cards remain readable and consistent with the design.
+   We scope to the .examenes container so we don't affect other pages. */
+html[data-theme="dark"] .examenes .grid-examenes .card-examen,
+html[data-theme="dark"] .examenes .card-examen {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgb(241, 232, 232) !important;
+}
+
+html[data-theme="dark"] .examenes .card-examen h3,
+html[data-theme="dark"] .examenes .card-examen p,
+html[data-theme="dark"] .examenes .card-examen .fecha,
+html[data-theme="dark"] .examenes .card-examen .card-body p {
+  color: #ffffff !important; /* darker text on forced light background */
+}
+

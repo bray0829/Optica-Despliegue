@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+:root{
+  --bg-start: #eaf6ff;
+  --bg-end: #ffffff;
+  --card-bg: #ffffff;
+  --muted: #6b7280;
+  --accent-1: #1E90FF;
+  --accent-2: #007BFF;
+}
+
+/* Page background with subtle medical icons using SVG data URIs */
+.registro-page{
+  min-height: 100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+  background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative faint icons */
+.registro-page::before{
+  content: '';
+  position: absolute; inset:0; pointer-events:none; z-index:0;
+  background-image: 
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><text x='0' y='40' font-size='40' fill='%23e6eefb'>❤</text></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><text x='0' y='40' font-size='36' fill='%23e6eefb'>✚</text></svg>"),
+    /* Se cambió 🩺 por 👓 */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><text x='0' y='40' font-size='36' fill='%23e6eefb'>👓</text></svg>");
+  background-repeat: repeat;
+  background-position: 10% 10%, 70% 40%, 40% 75%;
+  opacity: 0.16;
+  transform: rotate(-4deg);
+}
+
+.registro-card{
+  position: relative; z-index:2;
+  width: 100%;
+  max-width: 520px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 34px 28px;
+  box-shadow: 0 18px 40px rgba(20,30,60,0.06);
+  border: 1px solid #e6e9f0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.registro-avatar{ 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  margin: 0 auto 12px; 
+}
+
+.avatar-icon{
+  width:84px; 
+  height:84px; 
+  border-radius:50%; 
+  display:inline-flex; 
+  align-items:center; 
+  justify-content:center; 
+  font-size:36px; 
+  color:#fff;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 8px 18px rgba(30,90,250,0.16);
+}
+
+.registro-title{ 
+  font-size:22px; 
+  color:#0f172a; 
+  font-weight:700; 
+  margin:12px 0 6px; 
+}
+
+.registro-sub{ 
+  color:var(--muted); 
+  font-weight:300; 
+  margin-bottom:18px; 
+}
+
+.registro-form{ 
+  display:flex; 
+  flex-direction:column; 
+  gap:12px; 
+  align-items:stretch; 
+}
+
+.input-label{ 
+  display:block; 
+  text-align:left; 
+  font-size:13px; 
+  color:var(--muted); 
+  margin-left:6px; 
+}
+
+.input-with-icon{ 
+  display:flex; 
+  align-items:center; 
+  gap:10px; 
+  background:#f8f9fb; 
+  padding:8px 10px; 
+  border-radius:12px; 
+  border:1px solid #eef3fb; 
+}
+
+.input-with-icon .icon{ 
+  font-size:18px; 
+  opacity:0.9; 
+}
+
+.form-input{ 
+  border:0; 
+  background:transparent; 
+  outline:none; 
+  width:100%; 
+  font-size:14px; 
+  padding:6px 4px; 
+}
+
+.primary-btn{ 
+  margin-top:6px; 
+  background: linear-gradient(180deg,var(--accent-1),var(--accent-2)); 
+  color:#fff; 
+  border:none; 
+  padding:12px 18px; 
+  border-radius:12px; 
+  font-weight:700; 
+  font-size:15px; 
+  cursor:pointer; 
+  box-shadow:0 10px 30px rgba(30,90,250,0.16); 
+}
+
+.primary-btn:disabled{ 
+  opacity:0.6; 
+  cursor:not-allowed; 
+}
+
+.primary-btn:hover:not(:disabled){ 
+  transform:translateY(-2px); 
+  transition: transform 160ms ease; 
+}
+
+.form-error{ 
+  background:#fff4f4; 
+  border:1px solid #ffd6d6; 
+  color:#7b1111; 
+  padding:10px; 
+  border-radius:8px; 
+  margin-bottom:6px; 
+  text-align:left; 
+}
+
+.registro-footer{ 
+  margin-top:14px; 
+  color:var(--muted); 
+}
+
+.registro-footer a{ 
+  color:#2563eb; 
+  font-weight:600; 
+  margin-left:6px; 
+}
+
+@media (max-width:480px){
+  .registro-card{ 
+    padding:20px; 
+    border-radius:16px; 
+  }
+  .avatar-icon{ 
+    width:66px; 
+    height:66px; 
+    font-size:28px; 
+  }
+  .registro-title{ 
+    font-size:18px; 
+  }
+}

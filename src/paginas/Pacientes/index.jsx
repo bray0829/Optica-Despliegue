@@ -88,18 +88,7 @@ const Pacientes = () => {
           >
             Todos
           </button>
-          <button
-            className={`boton-filtro ${filtro === 'recientes' ? 'activo' : ''}`}
-            onClick={() => handleFiltro('recientes')}
-          >
-            Recientes
-          </button>
-          <button
-            className={`boton-filtro ${filtro === 'pendientes' ? 'activo' : ''}`}
-            onClick={() => handleFiltro('pendientes')}
-          >
-            Pendientes
-          </button>
+          
         </div>
 
         <button

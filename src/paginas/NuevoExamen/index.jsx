@@ -345,13 +345,6 @@ function NuevoExamen() {
   return (
     <main className="nuevo-examen-outer">
       <div className="nuevo-examen-card">
-        <button
-          type="button"
-          className="back-button"
-          onClick={() => navigate('/examenes')}
-        >
-          ←
-        </button>
 
         <div className="header-container">
           <div style={{textAlign:'center'}}>
@@ -482,7 +475,10 @@ function NuevoExamen() {
           <button type="submit" className="submit-button" disabled={loading || authLoading || !user}>
             {loading ? 'Guardando...' : authLoading ? 'Verificando sesión...' : 'Guardar Examen'}
           </button>
-        </form>
+          <button type="button" className="cancel-button" onClick={() => navigate('/examenes')}>
+              Cancelar
+            </button>
+        </form> 
       </div>
     </main>
   );

@@ -20,27 +20,30 @@ import Registro from "./paginas/Registro";
 import Logout from "./paginas/Logout";
 import ResetPassword from "./paginas/ResetPassword";
 import ResetSuccess from "./paginas/ResetPassword/success";
-import "./App.css";
-import "./assets/form-styles.css";
+import AdminUsers from "./paginas/Admin/Users";
+
 import PrivateRoute from "./Componentes/PrivateRoute";
 import AdminRoute from "./Componentes/AdminRoute";
-import AdminUsers from "./paginas/Admin/Users";
+
+import FloatingSettingsBubble from "./Componentes/FloatingSettingsBubble/FloatingSettingsBubble";
 import SettingsProvider from "./context/SettingsContext";
 
-// 🔧 Esta es la línea corregida
-import FloatingSettingsBubble from "./Componentes/FloatingSettingsBubble/FloatingSettingsBubble";
+import "./App.css";
+import "./assets/form-styles.css";
 
 function App() {
   return (
     <SettingsProvider>
       <Router>
         <Routes>
+          {/* Páginas públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-password/success" element={<ResetSuccess />} />
 
+          {/* Páginas privadas dentro del layout */}
           <Route
             path="/*"
             element={
@@ -76,7 +79,7 @@ function App() {
           />
         </Routes>
 
-        {/* 💡 Burbuja flotante visible en toda la app */}
+        {/* ⚙️ Burbuja de ajustes flotante */}
         <FloatingSettingsBubble />
       </Router>
     </SettingsProvider>

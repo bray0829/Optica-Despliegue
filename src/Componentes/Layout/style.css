@@ -2,6 +2,7 @@
 .layout-base {
   display: flex;
   min-height: 100vh;
+  height: 100vh; /* ✅ fuerza que el layout completo ocupe toda la ventana */
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -14,6 +15,7 @@
   transition: width 0.3s ease;
   flex-shrink: 0;
   overflow-y: auto;
+  min-height: 100vh; /* ✅ se asegura que se estire hasta el final */
 }
 
 .sidebar.collapsed {

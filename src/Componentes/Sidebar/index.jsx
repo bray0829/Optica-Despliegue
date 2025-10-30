@@ -105,7 +105,6 @@ const Sidebar = () => {
           </ul>
           <hr className="sidebar-divider" />
           <div className="sidebar-bottom">
-            <NavLink to="/ajustes" onClick={handleNavClick}><span className="sidebar-icon">{sidebarIcons.Ajustes}</span> Ajustes</NavLink>
             <NavLink to="/logout" onClick={handleNavClick}><span className="sidebar-icon">{sidebarIcons.Salir}</span> Salir</NavLink>
           </div>
         </nav>

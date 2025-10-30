@@ -1,81 +1,72 @@
 import React, { useEffect, useState } from 'react';
 import supabase from '../lib/supabaseClient';
 import { AuthContext } from './AuthContextDefinition';
+import usuariosService from '../services/usuarios';
 
-/**
- * Contexto de autenticación extendido:
- * - Guarda tanto el usuario autenticado (auth.user)
- * - Como el perfil en tu tabla `usuarios`
- */
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);          // Usuario de Supabase Auth
-  const [userProfile, setUserProfile] = useState(null); // Perfil en tabla `usuarios`
+  const [user, setUser] = useState(null);
+  const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Carga sesión inicial y escucha cambios
   useEffect(() => {
     let mounted = true;
 
-    const loadSession = async () => {
+    const loadUserSession = async () => {
       try {
         const { data } = await supabase.auth.getSession();
+        const sessionUser = data?.session?.user ?? null;
+
         if (!mounted) return;
 
-        const authUser = data?.session?.user ?? null;
-        setUser(authUser);
+        setUser(sessionUser);
 
-        if (authUser?.id) {
-          // Busca el perfil en tu tabla `usuarios` usando auth_id
-          const { data: perfil, error } = await supabase
+        if (sessionUser) {
+          // Buscar perfil en la tabla usuarios
+          const { data: perfilData, error } = await supabase
             .from('usuarios')
             .select('*')
-            .eq('auth_id', authUser.id)
+            .eq('auth_id', sessionUser.id)
             .single();
 
-          if (!error && perfil) setUserProfile(perfil);
-        } else {
-          setUserProfile(null);
+          if (!error && perfilData) {
+            setPerfil(perfilData);
+          }
         }
       } catch (err) {
-        console.error('Error cargando sesión:', err);
+        console.error('❌ Error cargando sesión AuthProvider:', err);
       } finally {
         if (mounted) setLoading(false);
       }
     };
 
-    loadSession();
+    loadUserSession();
 
-    // Escuchar cambios en sesión (login/logout)
-    const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      const authUser = session?.user ?? null;
-      setUser(authUser);
-
-      if (authUser?.id) {
-        const { data: perfil } = await supabase
-          .from('usuarios')
-          .select('*')
-          .eq('auth_id', authUser.id)
-          .single();
-        setUserProfile(perfil ?? null);
-      } else {
-        setUserProfile(null);
-      }
+    const { data: subscription } = supabase.auth.onAuthStateChange(() => {
+      loadUserSession();
     });
 
     return () => {
       mounted = false;
-      listener?.subscription?.unsubscribe?.();
+      subscription?.subscription?.unsubscribe?.();
     };
   }, []);
 
   const value = {
-    user,           // Usuario de auth
-    userProfile,    // Perfil en la tabla `usuarios`
+    user,
+    perfil, // 👈 ahora tienes acceso directo al rol y datos
     loading,
     signIn: (opts) => supabase.auth.signInWithPassword(opts),
     signUp: (opts) => supabase.auth.signUp(opts),
     signOut: () => supabase.auth.signOut(),
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }}>
+        <p>Cargando...</p>
+      </div>
+    );
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

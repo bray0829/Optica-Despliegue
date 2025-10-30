@@ -49,13 +49,11 @@ function Home() {
   return (
     <div className="home">
       <h1>{mensaje}</h1>
-      <p>Gestiona tus pacientes y exámenes de manera rápida y sencilla.</p>
+      <p>Da click a una de los botones para acceder de manera rapida a la opcion de tu eleccion.</p>
 
       {rol === 'paciente' && (
         <div className="quick-actions" role="region" aria-label="Accesos rápidos">
-          <button className="quick-btn" onClick={() => go('/pacientes')}>🧑‍⚕️ Pacientes</button>
           <button className="quick-btn" onClick={() => go('/examenes')}>🧾 Exámenes</button>
-          <button className="quick-btn" onClick={() => go('/remisiones')}>📄 Remisiones</button>
           <button className="quick-btn" onClick={() => go('/citas')}>📅 Citas</button>
           <button className="quick-btn" onClick={() => go('/juegos')}>🎮 Juegos</button>
         </div>

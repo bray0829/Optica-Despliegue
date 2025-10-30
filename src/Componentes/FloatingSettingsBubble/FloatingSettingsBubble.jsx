@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { SettingsContext } from "../context/SettingsContext";
+import { SettingsContext } from "../../context/SettingsContext";
 import "./FloatingSettingsBubble.css";
 
 const FloatingSettingsBubble = () => {

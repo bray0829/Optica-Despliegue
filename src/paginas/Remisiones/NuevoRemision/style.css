@@ -1,6 +1,25 @@
 /* === Nueva Remisión === */
-/* Basado en el estilo de NuevoExamen, adaptado al JSX de NuevoRemision */
+/* Visualmente igual a NuevoExamen */
 
+:root {
+  --color-fondo: #f8fbff;
+  --color-fondo-card: #ffffff;
+  --color-borde: #e5eaf2;
+  --color-acento: #2b7bff;
+  --color-acento-secundario: #1b5fd1;
+  --color-texto: #1e293b;
+  --color-texto-secundario: #64748b;
+  --color-boton-secundario: #f1f5f9;
+  --color-hover: #f8fafc;
+  --color-input: #f9fafb;
+  --color-error-fondo: #fee2e2;
+  --color-error-borde: #ef4444;
+  --color-error-texto: #991b1b;
+  --color-texto-boton: #ffffff;
+  --color-sombra: rgba(0, 0, 0, 0.08);
+}
+
+/* === Contenedor principal === */
 .nuevo-paciente-container {
   min-height: 90vh;
   background: var(--color-fondo);
@@ -16,9 +35,9 @@
   width: 90%;
   max-width: 720px;
   background: var(--color-fondo-card);
-  border-radius: 12px;
-  padding: 20px 24px;
-  box-shadow: 0 10px 30px var(--color-sombra);
+  border-radius: 16px;
+  padding: 32px 28px;
+  box-shadow: 0 8px 24px var(--color-sombra);
   border: 1px solid var(--color-borde);
   position: relative;
   margin: 0 auto;
@@ -26,42 +45,47 @@
   box-sizing: border-box;
 }
 
-/* === Header === */
-.card-header {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.main-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-acento);
-  margin-bottom: 4px;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: var(--color-texto-secundario);
-}
-
 /* === Botón de volver === */
 .back-button {
   position: absolute;
-  left: 18px;
-  top: 18px;
+  left: 16px;
+  top: 16px;
   background: var(--color-acento);
   color: var(--color-texto-boton);
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 10px;
   border: none;
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 22px rgba(41, 65, 110, 0.08);
+  box-shadow: 0 8px 22px rgba(43, 123, 255, 0.2);
   cursor: pointer;
   z-index: 20;
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+}
+
+/* === Header === */
+.card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.main-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-acento);
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--color-texto-secundario);
 }
 
 /* === Secciones === */
@@ -76,18 +100,18 @@
   margin-bottom: 8px;
 }
 
-/* === Campos y formulario === */
+/* === Formulario === */
 .paciente-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
+/* === Filas e inputs === */
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  width: 100%;
+  gap: 14px;
 }
 
 .form-group {
@@ -95,7 +119,6 @@
   min-width: 260px;
 }
 
-/* === Inputs === */
 label {
   display: block;
   font-size: 13px;
@@ -111,13 +134,21 @@ textarea,
 select {
   width: 100%;
   box-sizing: border-box;
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid var(--color-borde);
   background: var(--color-input);
   color: var(--color-texto);
   font-size: 14px;
   height: 40px;
+  transition: border-color 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-acento);
+  outline: none;
 }
 
 textarea {
@@ -137,15 +168,21 @@ textarea {
 }
 
 .search-button {
-  background: var(--color-acento);
+  background: linear-gradient(180deg, var(--color-acento), var(--color-acento-secundario));
   border: none;
   color: var(--color-texto-boton);
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  transition: transform 0.2s ease;
 }
 
+.search-button:hover {
+  transform: translateY(-1px);
+}
+
+/* === Sugerencias === */
 .suggestions-list {
   margin-top: 6px;
   background: var(--color-fondo-card);
@@ -181,7 +218,7 @@ textarea {
 /* === Botones === */
 .actions-row {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: flex-end;
 }
 
@@ -234,7 +271,7 @@ textarea {
 @media (max-width: 900px) {
   .card-wrap {
     width: 95%;
-    padding: 16px;
+    padding: 20px;
   }
 
   .form-row {

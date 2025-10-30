@@ -47,40 +47,57 @@ function Home() {
   const go = (path) => navigate(path);
 
   return (
-    <div className="home">
-      <h1>{mensaje}</h1>
-      <p>Da click a una de los botones para acceder de manera rapida a la opcion de tu eleccion.</p>
+    <div
+      className="home"
+      style={{
+        backgroundImage: `url('https://www.shutterstock.com/image-photo/young-beautiful-disappointed-tired-woman-600nw-1034021968.jpg')`, // 🌄 Cambia esta URL por la que quieras
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        textShadow: '1px 1px 4px rgba(0,0,0,0.8)',
+      }}
+    >
+      <div className="bg-black/60 p-8 rounded-2xl text-center max-w-3xl backdrop-blur-sm">
+        <h1 className="text-3xl font-bold mb-3">{mensaje}</h1>
+        <p className="text-lg mb-6">
+          Da click a uno de los botones para acceder rápidamente a la opción de tu elección.
+        </p>
 
-      {rol === 'paciente' && (
-        <div className="quick-actions" role="region" aria-label="Accesos rápidos">
-          <button className="quick-btn" onClick={() => go('/examenes')}>🧾 Exámenes</button>
-          <button className="quick-btn" onClick={() => go('/citas')}>📅 Citas</button>
-          <button className="quick-btn" onClick={() => go('/juegos')}>🎮 Juegos</button>
-        </div>
-      )}
+        {rol === 'paciente' && (
+          <div className="quick-actions" role="region" aria-label="Accesos rápidos">
+            <button className="quick-btn" onClick={() => go('/examenes')}>🧾 Exámenes</button>
+            <button className="quick-btn" onClick={() => go('/citas')}>📅 Citas</button>
+            <button className="quick-btn" onClick={() => go('/juegos')}>🎮 Juegos</button>
+          </div>
+        )}
 
-      {rol === 'especialista' && (
-        <div className="quick-actions" role="region" aria-label="Accesos rápidos especialista">
-          <button className="quick-btn" onClick={() => go('/pacientes')}>🧑‍⚕️ Pacientes</button>
-          <button className="quick-btn" onClick={() => go('/examenes')}>🧾 Exámenes</button>
-          <button className="quick-btn" onClick={() => go('/nuevo-examen')}>➕ Nuevo Examen</button>
-          <button className="quick-btn" onClick={() => go('/citas')}>📅 Citas</button>
-          <button className="quick-btn" onClick={() => go('/remisiones')}>📄 Remisiones</button>
-        </div>
-      )}
-      {rol === 'administrador' && (
-        <div className="quick-actions" role="region" aria-label="Accesos rápidos administrador">
-          <button className="quick-btn" onClick={() => go('/')}>🏠 Inicio</button>
-          <button className="quick-btn" onClick={() => go('/pacientes')}>🧑‍⚕️ Pacientes</button>
-          <button className="quick-btn" onClick={() => go('/examenes')}>🧾 Exámenes</button>
-          <button className="quick-btn" onClick={() => go('/nuevo-examen')}>➕ Nuevo Examen</button>
-          <button className="quick-btn" onClick={() => go('/remisiones')}>📄 Remisiones</button>
-          <button className="quick-btn" onClick={() => go('/citas')}>📅 Citas</button>
-          <button className="quick-btn" onClick={() => go('/juegos')}>🎮 Juegos</button>
-          <button className="quick-btn" onClick={() => go('/admin/users')}>👑 Admin</button>
-          <button className="quick-btn" onClick={() => go('/ajustes')}>⚙️ Ajustes</button>
-        </div>
-      )}
+        {rol === 'especialista' && (
+          <div className="quick-actions" role="region" aria-label="Accesos rápidos especialista">
+            <button className="quick-btn" onClick={() => go('/pacientes')}>🧑‍⚕️ Pacientes</button>
+            <button className="quick-btn" onClick={() => go('/examenes')}>🧾 Exámenes</button>
+            <button className="quick-btn" onClick={() => go('/citas')}>📅 Citas</button>
+            <button className="quick-btn" onClick={() => go('/remisiones')}>📄 Remisiones</button>
+          </div>
+        )}
+
+        {rol === 'administrador' && (
+          <div className="quick-actions" role="region" aria-label="Accesos rápidos administrador">
+            <button className="quick-btn" onClick={() => go('/')}>🏠 Inicio</button>
+            <button className="quick-btn" onClick={() => go('/pacientes')}>🧑‍⚕️ Pacientes</button>
+            <button className="quick-btn" onClick={() => go('/examenes')}>🧾 Exámenes</button>
+            <button className="quick-btn" onClick={() => go('/remisiones')}>📄 Remisiones</button>
+            <button className="quick-btn" onClick={() => go('/citas')}>📅 Citas</button>
+            <button className="quick-btn" onClick={() => go('/juegos')}>🎮 Juegos</button>
+            <button className="quick-btn" onClick={() => go('/admin/users')}>👑 Admin</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

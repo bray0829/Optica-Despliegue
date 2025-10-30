@@ -50,7 +50,7 @@ function Home() {
     <div
       className="home"
       style={{
-        backgroundImage: `url('https://www.shutterstock.com/image-photo/young-beautiful-disappointed-tired-woman-600nw-1034021968.jpg')`, // 🌄 Cambia esta URL por la que quieras
+        backgroundImage: `url('https://img.freepik.com/fotos-premium/composicion-muchas-gafas-estilo-clasico-diferentes-soportes-cuadrados-blancos-foto-estudio_237099-16.jpg')`, // 🌄 Cambia esta URL por la que quieras
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

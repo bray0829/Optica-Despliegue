@@ -7,6 +7,13 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
   const [original, setOriginal] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // 🔄 Mapeo de nombres visuales a nombres reales en la BD
+  const fieldMap = {
+    archivos: 'pdf_path',
+    paciente: 'paciente_id',
+    especialista: 'especialista_id'
+  };
+
   useEffect(() => {
     if (item) {
       setForm({ ...item });
@@ -31,7 +38,6 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
         return;
       }
 
-      // 🚫 Campos no editables
       const nonEditable = [
         'id',
         'usuario_id',
@@ -41,24 +47,31 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
         'updated_at'
       ];
 
-      // ✅ Generar payload con solo columnas válidas
+      // ✅ Generar payload con solo campos válidos
       const payload = {};
       for (const key in form) {
-        if (
-          !nonEditable.includes(key) &&
-          form[key] !== undefined &&
-          form[key] !== null
-        ) {
-          payload[key] = form[key];
+        if (!nonEditable.includes(key) && form[key] !== undefined) {
+          // Si el campo tiene un alias, usamos el nombre real
+          const realKey = fieldMap[key] || key;
+          payload[realKey] = form[key];
         }
       }
 
-      // ⚙️ Si se filtraron campos de visualización, se eliminan también
-      delete payload.paciente;
-      delete payload.especialista;
+      // ❌ Eliminar cualquier campo inválido
+      Object.keys(payload).forEach((key) => {
+        if (![
+          'fecha',
+          'notas',
+          'motivo',
+          'estado',
+          'pdf_path'
+        ].includes(key)) {
+          delete payload[key];
+        }
+      });
 
       if (Object.keys(payload).length === 0) {
-        alert("No hay campos editables para guardar.");
+        alert("No hay campos válidos para guardar.");
         setLoading(false);
         return;
       }

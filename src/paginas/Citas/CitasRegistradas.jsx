@@ -21,13 +21,13 @@ const CitasRegistradas = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedCancel, setSelectedCancel] = useState(null);
 
-  // ✅ Cargar perfil del usuario autenticado
+  // Cargar perfil del usuario autenticado
   useEffect(() => {
     if (!user?.id) return;
     let mounted = true;
     const loadPerfil = async () => {
       try {
-        const p = await usuariosService.getUsuarioByAuthId(user.id); // ✅ corregido
+        const p = await usuariosService.getUsuarioById(user.id);
         console.log("Perfil cargado:", p);
         if (mounted) setPerfil(p);
       } catch (err) {
@@ -38,9 +38,9 @@ const CitasRegistradas = () => {
     return () => { mounted = false; };
   }, [user?.id]);
 
-  // ✅ Cargar citas (espera a tener perfil)
+  // Cargar citas (espera a tener perfil)
   useEffect(() => {
-    if (!user?.id || !perfil) return;
+    if (!user?.id) return;
     let mounted = true;
 
     const fetchCitas = async () => {
@@ -59,7 +59,7 @@ const CitasRegistradas = () => {
 
         const rows = rowsAll || [];
 
-        // Enriquecer datos con nombres
+        // Enriquecer con nombres
         const pacienteIds = Array.from(new Set(rows.map(r => r.paciente_id).filter(Boolean)));
         const especialistaIds = Array.from(new Set(rows.map(r => r.especialista_id).filter(Boolean)));
 
@@ -106,15 +106,15 @@ const CitasRegistradas = () => {
           };
         });
 
-        // ✅ Filtro por rol
+        // 🔥 Mostrar TODAS las citas si el rol es "administrador"
         let finalRows = enriched;
         const rol = String(perfil?.rol || "").toLowerCase();
-        console.log("Rol detectado:", rol);
 
-        if (rol === "admin" || rol === "administrador") {
-          console.log("🔓 Administrador: todas las citas");
+        if (rol === "administrador" || rol === "admin") {
+          console.log("🔓 Administrador detectado: mostrando todas las citas");
+          finalRows = enriched; // sin filtro
         } else if (rol === "especialista") {
-          const esp = await especialistasService.getEspecialistaByUsuarioId(perfil.id);
+          const esp = await especialistasService.getEspecialistaByUsuarioId(user.id);
           if (esp?.id) {
             finalRows = enriched.filter(r => String(r.especialista_id) === String(esp.id));
           } else {
@@ -124,7 +124,7 @@ const CitasRegistradas = () => {
           const { data: pacienteData } = await supabase
             .from("pacientes")
             .select("id")
-            .eq("usuario_id", perfil.id)
+            .eq("usuario_id", user.id)
             .maybeSingle();
           if (pacienteData?.id) {
             finalRows = enriched.filter(r => String(r.paciente_id) === String(pacienteData.id));
@@ -136,7 +136,6 @@ const CitasRegistradas = () => {
           finalRows = [];
         }
 
-        console.log("Citas finales visibles:", finalRows);
         if (mounted) setCitas(finalRows);
       } catch (err) {
         console.error("Error general cargando citas:", err);
@@ -151,14 +150,13 @@ const CitasRegistradas = () => {
     return () => { mounted = false; };
   }, [user?.id, perfil]);
 
-  // 🔍 Filtro de búsqueda
+  // Filtro de búsqueda
   const filtradas = citas.filter(c => {
     if (!filtro) return true;
     const b = filtro.toLowerCase();
     return (c.doctor && c.doctor.toLowerCase().includes(b)) || (c.fecha && c.fecha.includes(b));
   });
 
-  // ⚙️ Modales y acciones
   const handleView = (c) => { setDetailItem(c); setDetailOpen(true); };
   const handleCancel = (c) => { setSelectedCancel(c); setCancelOpen(true); };
 
@@ -178,14 +176,16 @@ const CitasRegistradas = () => {
   };
 
   const rolLower = String(perfil?.rol || "").toLowerCase();
-  const isAdmin = rolLower === "admin" || rolLower === "administrador";
+  const isAdmin = rolLower === "administrador" || rolLower === "admin";
 
   return (
     <main className="citas-registradas">
       <header className="header">
         <h2>Gestión de Citas</h2>
         <p className="descripcion">
-          {isAdmin ? "Visualización completa de todas las citas registradas." : "Consulta los registros de tus citas agendadas."}
+          {isAdmin
+            ? "Visualización completa de todas las citas registradas."
+            : "Consulta los registros de tus citas agendadas."}
         </p>
       </header>
 
@@ -196,8 +196,10 @@ const CitasRegistradas = () => {
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
         />
-        {rolLower !== "especialista" && (
-          <button className="boton-nuevo" onClick={() => navigate("/agendar-cita")}>+ Agendar Cita</button>
+        {!isAdmin && (
+          <button className="boton-nuevo" onClick={() => navigate("/agendar-cita")}>
+            + Agendar Cita
+          </button>
         )}
       </div>
 

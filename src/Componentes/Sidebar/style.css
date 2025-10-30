@@ -126,4 +126,133 @@
   background: var(--azul-suave);
   color: var(--azul-oscuro);
 }
-[data-theme]()
+[data-theme="dark"] .sidebar a.active {
+  background: #334155;
+  color: #60a5fa;
+}
+.sidebar a:hover,
+.sidebar a:focus {
+  background: #e3f0ff;
+  color: var(--azul-oscuro);
+  outline: none;
+}
+[data-theme="dark"] .sidebar a:hover {
+  background: #334155;
+  color: #93c5fd;
+}
+
+/* Íconos */
+.sidebar-icon {
+  font-size: 1.25em;
+}
+
+/* División */
+.sidebar-divider {
+  border: none;
+  border-top: 1.5px solid var(--azul-suave);
+  margin: 0.7em 0 1em 0;
+  width: 80%;
+  align-self: center;
+}
+[data-theme="dark"] .sidebar-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  margin-top: 1.5em;
+}
+
+/* 🔹 Menú móvil */
+.sidebar-animated {
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+}
+.sidebar-animated.open {
+  transform: translateX(0);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.15);
+  z-index: 999;
+}
+
+/* Botón hamburguesa */
+.sidebar-hamburger {
+  position: fixed;
+  top: 1.2rem;
+  left: 1.2rem;
+  z-index: 110;
+  background: var(--blanco);
+  border: 1.5px solid var(--azul-borde);
+  border-radius: 8px;
+  padding: 0.5em 0.7em;
+  font-size: 1.7em;
+  color: var(--azul-medio);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(46,92,154,0.07);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+[data-theme="dark"] .sidebar-hamburger {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #93c5fd;
+}
+.sidebar-hamburger:hover,
+.sidebar-hamburger:focus {
+  background: #e3f0ff;
+  box-shadow: 0 4px 12px rgba(46,92,154,0.13);
+}
+[data-theme="dark"] .sidebar-hamburger:hover {
+  background: #334155;
+}
+.hamburger-icon {
+  pointer-events: none;
+}
+
+/* Responsivo */
+@media (min-width: 900px) {
+  .sidebar-animated,
+  .sidebar-animated.open {
+    position: relative;
+    transform: none;
+    transition: none;
+    left: 0;
+    top: 0;
+    z-index: 2;
+  }
+  .sidebar-hamburger {
+    display: none;
+  }
+  .sidebar-overlay {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    min-height: 100dvh;
+    height: 100dvh;
+    max-height: 100dvh;
+    width: 80vw;
+    font-size: 0.98rem;
+  }
+  .sidebar-header {
+    padding: 1rem 0.7rem 0.7rem 0.7rem;
+  }
+  .sidebar-nav {
+    padding: 1rem 0.7rem 0.7rem 0.7rem;
+  }
+}

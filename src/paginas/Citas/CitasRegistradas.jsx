@@ -10,7 +10,7 @@ import "./style.css";
 
 const CitasRegistradas = () => {
   const navigate = useNavigate();
-  const { user, perfil } = useAuth(); // 👈 usamos el perfil directamente del contexto
+  const { user, perfil } = useAuth(); // 👈 obtenemos perfil directamente del contexto
   const [citas, setCitas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState("");
@@ -20,28 +20,30 @@ const CitasRegistradas = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedCancel, setSelectedCancel] = useState(null);
 
-  // 🔹 Cargar citas (espera a tener usuario y perfil)
+  // Cargar citas
   useEffect(() => {
-    if (!user?.id || !perfil?.rol) return;
+    if (!perfil) return; // Esperamos el perfil
     let mounted = true;
 
     const fetchCitas = async () => {
       setLoading(true);
       try {
+        console.log("🔍 Cargando citas... Rol:", perfil.rol);
+
         const { data: rowsAll, error: errCitas } = await supabase
           .from("citas")
           .select("*")
           .order("fecha", { ascending: true });
 
         if (errCitas) {
-          console.error("Error cargando citas:", errCitas);
+          console.error("❌ Error cargando citas:", errCitas);
           if (mounted) setCitas([]);
           return;
         }
 
         const rows = rowsAll || [];
 
-        // Enriquecer con nombres
+        // 🔹 Enriquecer datos
         const pacienteIds = Array.from(new Set(rows.map(r => r.paciente_id).filter(Boolean)));
         const especialistaIds = Array.from(new Set(rows.map(r => r.especialista_id).filter(Boolean)));
 
@@ -84,19 +86,19 @@ const CitasRegistradas = () => {
             ...r,
             paciente_nombre: paciente?.nombre || "",
             doctor: especialistaUsuario?.nombre || "",
-            especialidad: especialista?.especialidad || ""
+            especialidad: especialista?.especialidad || "",
           };
         });
 
-        // 🔥 Mostrar TODAS las citas si el rol es "administrador"
+        // 🔥 Filtrado según rol
         const rol = String(perfil?.rol || "").toLowerCase();
         let finalRows = [];
 
         if (rol === "administrador" || rol === "admin") {
-          console.log("🔓 Administrador detectado: mostrando todas las citas");
+          console.log("✅ Administrador detectado — mostrando TODAS las citas");
           finalRows = enriched;
         } else if (rol === "especialista") {
-          const esp = await especialistasService.getEspecialistaByUsuarioId(user.id);
+          const esp = await especialistasService.getEspecialistaByUsuarioId(perfil.id);
           if (esp?.id) {
             finalRows = enriched.filter(r => String(r.especialista_id) === String(esp.id));
           }
@@ -104,13 +106,11 @@ const CitasRegistradas = () => {
           const { data: pacienteData } = await supabase
             .from("pacientes")
             .select("id")
-            .eq("usuario_id", user.id)
+            .eq("usuario_id", perfil.id)
             .maybeSingle();
           if (pacienteData?.id) {
             finalRows = enriched.filter(r => String(r.paciente_id) === String(pacienteData.id));
           }
-        } else {
-          console.warn("⚠️ Rol no reconocido:", perfil?.rol);
         }
 
         if (mounted) setCitas(finalRows);
@@ -125,17 +125,12 @@ const CitasRegistradas = () => {
     fetchCitas();
 
     return () => { mounted = false; };
-  }, [user?.id, perfil?.rol]);
+  }, [perfil]);
 
-  // 🔍 Filtro de búsqueda
   const filtradas = citas.filter(c => {
     if (!filtro) return true;
     const b = filtro.toLowerCase();
-    return (
-      (c.doctor && c.doctor.toLowerCase().includes(b)) ||
-      (c.fecha && c.fecha.includes(b)) ||
-      (c.paciente_nombre && c.paciente_nombre.toLowerCase().includes(b))
-    );
+    return (c.doctor && c.doctor.toLowerCase().includes(b)) || (c.fecha && c.fecha.includes(b));
   });
 
   const handleView = (c) => { setDetailItem(c); setDetailOpen(true); };
@@ -173,7 +168,7 @@ const CitasRegistradas = () => {
       <div className="acciones-citas">
         <input
           className="input-busqueda"
-          placeholder="Buscar por paciente, fecha o doctor..."
+          placeholder="Buscar por fecha o doctor..."
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
         />
@@ -207,9 +202,7 @@ const CitasRegistradas = () => {
 
               <div className="acciones-card">
                 <button className="btn-ver" onClick={() => handleView(c)}>Ver</button>
-                {!isAdmin && (
-                  <button className="btn-eliminar" onClick={() => handleCancel(c)}>Cancelar</button>
-                )}
+                {!isAdmin && <button className="btn-eliminar" onClick={() => handleCancel(c)}>Cancelar</button>}
               </div>
             </div>
           ))}

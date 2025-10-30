@@ -26,7 +26,9 @@ import PrivateRoute from "./Componentes/PrivateRoute";
 import AdminRoute from "./Componentes/AdminRoute";
 import AdminUsers from "./paginas/Admin/Users";
 import SettingsProvider from "./context/SettingsContext";
-import FloatingSettingsBubble from "./Componentes/FloatingSettingsBubble";
+
+// 🔧 Esta es la línea corregida
+import FloatingSettingsBubble from "./Componentes/FloatingSettingsBubble/FloatingSettingsBubble";
 
 function App() {
   return (

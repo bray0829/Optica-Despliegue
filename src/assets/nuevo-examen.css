@@ -1,18 +1,11 @@
-/* NuevoExamen styles - Responsive and centered layout */
+/* NuevoExamen styles - Adaptado a modo oscuro */
 
-:root {
-  --bg: #f4f9ff;
-  --card: #ffffff;
-  --muted: #6b7280;
-  --accent: #2b7bff;
-  --accent-600: #2a6ef3;
-}
-
+/* No definas variables aquí, las toma del SettingsContext */
 .nuevo-examen-outer {
   min-height: 90vh;
-  background: var(--bg);
+  background: var(--color-fondo);
   display: flex;
-  align-items: center; /* centra verticalmente */
+  align-items: center;
   justify-content: center;
   padding: 24px;
   box-sizing: border-box;
@@ -22,13 +15,15 @@
 .nuevo-examen-card {
   width: 90%;
   max-width: 720px;
-  background: var(--card);
+  background: var(--color-fondo-card);
   border-radius: 12px;
-  padding: 20px 24px; /* 👇 Ajusta el alto interno del card (menos padding = más corto) */
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px var(--color-sombra);
+  border: 1px solid var(--color-borde);
   position: relative;
   margin: 0 auto;
   box-sizing: border-box;
+  color: var(--color-texto);
 }
 
 /* Header */
@@ -36,11 +31,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 12px; /* 👇 Reduce espacio bajo el título */
+  margin-bottom: 12px;
 }
+
 .header-container h2 {
   font-size: 24px;
-  color: var(--accent-600);
+  color: var(--color-acento);
   font-weight: 700;
   text-align: center;
 }
@@ -50,8 +46,8 @@
   position: absolute;
   left: 18px;
   top: 18px;
-  background: var(--accent);
-  color: #fff;
+  background: var(--color-acento);
+  color: var(--color-texto-boton);
   border-radius: 12px;
   padding: 10px 12px;
   border: none;
@@ -70,13 +66,13 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* 👇 Reduce la distancia vertical entre campos */
+  gap: 10px;
 }
 
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* 👇 Reduce espacio entre columnas */
+  gap: 10px;
   width: 100%;
 }
 
@@ -89,39 +85,33 @@
 label {
   display: block;
   font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 4px; /* 👇 Reduce espacio entre label e input */
+  color: var(--color-texto-secundario);
+  margin-bottom: 4px;
 }
 
 input[type=text],
 input[type=date],
 input[type=file],
-textarea {
+textarea,
+.form-group select {
   width: 100%;
   box-sizing: border-box;
-  padding: 8px 10px; /* 👇 Menos padding interno = menos alto */
+  padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid #eef3fb;
-  background: var(--card);
+  border: 1px solid var(--color-borde);
+  background: var(--color-input);
+  color: var(--color-texto);
   font-size: 14px;
-  height: 40px; /* 👇 Reduce altura de inputs */
+  height: 40px;
 }
 
-  /* style selects to match other inputs */
-  .form-group select {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #eef3fb;
-    background: var(--card);
-    font-size: 14px;
-    height: 44px;
-    appearance: none; /* remove native arrow in some browsers */
-  }
+.form-group select {
+  height: 44px;
+  appearance: none;
+}
 
 textarea {
-  min-height: 80px; /* 👇 Reduce altura del campo grande */
+  min-height: 80px;
   resize: vertical;
   padding: 10px 12px;
 }
@@ -130,52 +120,56 @@ textarea {
 .autocomplete {
   position: relative;
 }
+
 .suggestions-list {
   position: absolute;
   left: 0;
   right: 0;
   top: 100%;
-  background: #fff;
-  border: 1px solid #eef3fb;
+  background: var(--color-fondo-card);
+  border: 1px solid var(--color-borde);
   border-radius: 8px;
   padding: 6px 0;
   z-index: 50;
   max-height: 220px;
   overflow: auto;
-  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+  box-shadow: 0 8px 24px var(--color-sombra);
 }
+
 .suggestions-list li {
   padding: 8px 12px;
   cursor: pointer;
+  color: var(--color-texto);
 }
+
 .suggestions-list li:hover {
-  background: #f7fbff;
+  background: var(--color-hover);
 }
 
 /* Subida de archivos */
 .upload-progress {
   margin-top: 6px;
   font-size: 13px;
-  color: var(--muted);
+  color: var(--color-texto-secundario);
 }
 
 /* Errores */
 .form-error {
   padding: 10px;
   border-radius: 8px;
-  background: #fff4f4;
-  border: 1px solid #ffd6d6;
-  color: #7b1111;
+  background: var(--color-error-fondo);
+  border: 1px solid var(--color-error-borde);
+  color: var(--color-error-texto);
   margin-bottom: 10px;
 }
 
 /* Botón de enviar */
 .submit-button {
   display: block;
-  margin: 14px auto 0; /* 👇 Reduce separación antes del botón */
+  margin: 14px auto 0;
   padding: 10px 16px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-600));
-  color: #fff;
+  background: linear-gradient(180deg, var(--color-acento), var(--color-acento-secundario));
+  color: var(--color-texto-boton);
   border: none;
   border-radius: 10px;
   width: 100%;
@@ -193,18 +187,19 @@ textarea {
 
 /* Botón secundario */
 .secondary-button {
-  background: #f3f7ff;
-  border: 1px solid #e6f0ff;
+  background: var(--color-boton-secundario);
+  border: 1px solid var(--color-borde);
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
+  color: var(--color-texto);
 }
 
 /* MEDIA QUERIES */
 @media (max-width: 900px) {
   .nuevo-examen-card {
     width: 95%;
-    padding: 16px; /* 👇 Ajusta para pantallas pequeñas */
+    padding: 16px;
   }
   .form-row {
     flex-direction: column;

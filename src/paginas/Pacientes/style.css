@@ -1,4 +1,23 @@
-/* === Nueva interfaz Pacientes === */
+/* === Pacientes Moderno (adaptado al estilo de Exámenes) === */
+.pacientes {
+  padding: 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.header h2 {
+  font-size: 1.75rem;
+  color: #1e3a8a;
+  margin-bottom: 0.5rem;
+}
+
+.descripcion {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* === Acciones === */
 .acciones-pacientes {
   display: flex;
   align-items: center;
@@ -12,34 +31,9 @@
   padding: 0.6rem 1rem;
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  width: 250px;
+  width: 260px;
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.botones-filtro {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.boton-filtro {
-  background-color: #e0e7ff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  color: #1e3a8a;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.boton-filtro:hover {
-  background-color: #c7d2fe;
-}
-
-.boton-filtro.activo {
-  background-color: #1e3a8a;
-  color: white;
 }
 
 .boton-nuevo {
@@ -49,29 +43,28 @@
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
 .boton-nuevo:hover {
-  transform: translateY(-2px);
   background-color: #1c3578;
+  transform: translateY(-2px);
 }
 
 /* === Cards === */
 .grid-pacientes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
   gap: 1.5rem;
 }
 
 .card-paciente {
-  background: white;
+  background-color: var(--color-bg-secondary);
   border-radius: 10px;
   padding: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .card-paciente:hover {
@@ -79,25 +72,17 @@
 }
 
 .card-paciente h3 {
-  color: #1e3a8a;
+  color: var(--color-accent, #1e3a8a);
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .card-paciente p {
-  color: #555;
+  color: var(--color-text-primary);
   margin: 0.3rem 0;
 }
 
-/* Unified card title/subtitle/meta used across pages */
-.card-title { font-size: 20px; color: #1e3a8a; margin: 0 0 6px 0; font-weight:700; line-height:1.05 }
-.card-subtitle { display:flex; align-items:center; gap:8px; color:#6b7280; font-size:14px; margin-bottom:8px }
-.card-subtitle .doc { font-weight:600 }
-.card-subtitle .phone { font-weight:500; color:#374151 }
-.card-subtitle .dot { color:#6b7280; margin: 0 6px }
-.card-meta { display:flex; gap:12px; flex-wrap:wrap; color:#6b7280; font-size:13px }
-.card-meta .nacimiento, .card-meta .direccion { color:#6b7280 }
-
+/* Acciones dentro de la card */
 .acciones-card {
   display: flex;
   justify-content: flex-end;
@@ -113,7 +98,7 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .btn-ver {
@@ -139,7 +124,7 @@
 .sin-datos-card {
   text-align: center;
   color: #6b7280;
-  background: #f9fafb;
+  background: var(--color-bg-secondary);
   padding: 2rem;
   border-radius: 10px;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
@@ -171,4 +156,31 @@
 .paginacion span {
   font-weight: 600;
   color: #1e3a8a;
+}
+
+/* ==================================================== */
+/* Dark mode overrides igual que Exámenes */
+/* ==================================================== */
+
+html[data-theme="dark"] .pacientes {
+  background-color: var(--color-bg-primary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+html[data-theme="dark"] .grid-pacientes .card-paciente {
+  background-color: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+}
+
+html[data-theme="dark"] .grid-pacientes .card-paciente h3,
+html[data-theme="dark"] .grid-pacientes .card-paciente p {
+  color: var(--color-text-primary) !important;
+}
+
+html[data-theme="dark"] .input-busqueda {
+  background-color: #fff;
+  color: #111827;
+  border: 1px solid rgba(255,255,255,0.1);
 }

@@ -120,4 +120,3 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
 };
 
 export default ModalEdit;
-s

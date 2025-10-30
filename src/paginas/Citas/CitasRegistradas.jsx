@@ -1,13 +1,12 @@
-// ✅ CitasRegistradas — CORREGIDO COMPLETO
+// ✅ CitasRegistradas — CORREGIDO CON CAMPOS REALES
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../../lib/supabaseClient";
 import { useAuth } from "../../context/AuthContextDefinition";
 import especialistasService from "../../services/especialistas";
-import usuariosService from "../../services/usuarios";
+import "./style.css";
 import DetailModal from "../../Componentes/DetailModal";
 import ModalCancelarCita from "../../Componentes/ModalCancelarCita";
-import "./style.css";
 
 const CitasRegistradas = () => {
   const navigate = useNavigate();
@@ -19,6 +18,7 @@ const CitasRegistradas = () => {
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailItem, setDetailItem] = useState(null);
+
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedCancel, setSelectedCancel] = useState(null);
 
@@ -27,12 +27,10 @@ const CitasRegistradas = () => {
     let mounted = true;
 
     const fetchCitas = async () => {
-      setLoading(true);
-
       try {
-        console.log("🔍 Cargando citas desde Supabase…");
+        setLoading(true);
 
-        // ✅ Cargar citas reales
+        // ✅ Cargar citas usando los nombres correctos
         const { data: rows, error } = await supabase
           .from("citas")
           .select("*")
@@ -43,13 +41,11 @@ const CitasRegistradas = () => {
           return;
         }
 
-        console.log("✅ Citas sin procesar:", rows);
+        // ✅ IDs correctos
+        const pacienteIds = [...new Set(rows.map(r => r.paciente_id))];
+        const especialistaIds = [...new Set(rows.map(r => r.especialista_id))];
 
-        // ✅ Mapeo de IDs reales
-        const pacienteIds = [...new Set(rows.map(r => r.paciente))];
-        const especialistaIds = [...new Set(rows.map(r => r.especialista))];
-
-        // ✅ Cargar pacientes
+        // ✅ Cargar pacientes reales
         const pacientesMap = {};
         if (pacienteIds.length) {
           const { data: pacientes } = await supabase
@@ -60,9 +56,9 @@ const CitasRegistradas = () => {
           pacientes?.forEach(p => (pacientesMap[p.id] = p));
         }
 
-        // ✅ Cargar especialistas
+        // ✅ Cargar especialistas (tabla especialistas)
         const especialistasMap = {};
-        const usuarioIds = [];
+        const usuariosIds = [];
 
         if (especialistaIds.length) {
           const { data: especialistas } = await supabase
@@ -72,55 +68,49 @@ const CitasRegistradas = () => {
 
           especialistas?.forEach(e => {
             especialistasMap[e.id] = e;
-            usuarioIds.push(e.usuario_id);
+            usuariosIds.push(e.usuario_id);
           });
         }
 
-        // ✅ Cargar usuarios (doctores)
+        // ✅ Cargar usuarios (nombre del doctor)
         const usuariosMap = {};
-        if (usuarioIds.length) {
+        if (usuariosIds.length) {
           const { data: usuarios } = await supabase
             .from("usuarios")
             .select("id,nombre")
-            .in("id", usuarioIds);
+            .in("id", usuariosIds);
 
           usuarios?.forEach(u => (usuariosMap[u.id] = u));
         }
 
-        // ✅ Enriquecer citas
+        // ✅ Enriquecer datos con nombres reales
         const enriched = rows.map(r => ({
           ...r,
-          paciente_nombre: pacientesMap[r.paciente]?.nombre || "",
-          doctor: usuariosMap[especialistasMap[r.especialista]?.usuario_id]?.nombre || "",
-          especialidad: especialistasMap[r.especialista]?.especialidad || "",
+          paciente_nombre: pacientesMap[r.paciente_id]?.nombre || "",
+          doctor: usuariosMap[especialistasMap[r.especialista_id]?.usuario_id]?.nombre || "",
+          especialidad: especialistasMap[r.especialista_id]?.especialidad || "",
         }));
 
-        console.log("✅ Citas procesadas:", enriched);
-
-        // ✅ Filtrado por rol real
+        // ✅ Filtrado por ROL
         const rol = perfil?.rol?.toLowerCase();
         let finalRows = enriched;
 
         if (rol === "especialista") {
           const esp = await especialistasService.getEspecialistaByUsuarioId(perfil.id);
-          if (esp) {
-            finalRows = enriched.filter(c => c.especialista === esp.id);
-          }
-        } else if (rol === "paciente") {
+          if (esp) finalRows = enriched.filter(c => c.especialista_id === esp.id);
+        }
+
+        if (rol === "paciente") {
           const { data: pac } = await supabase
             .from("pacientes")
             .select("id")
             .eq("usuario_id", perfil.id)
             .maybeSingle();
 
-          if (pac) {
-            finalRows = enriched.filter(c => c.paciente === pac.id);
-          }
+          if (pac) finalRows = enriched.filter(c => c.paciente_id === pac.id);
         }
 
         if (mounted) setCitas(finalRows);
-      } catch (err) {
-        console.error("❌ Error general:", err);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -130,28 +120,11 @@ const CitasRegistradas = () => {
     return () => (mounted = false);
   }, [perfil]);
 
+  // ✅ Búsqueda
   const filtradas = citas.filter(c =>
     c.doctor?.toLowerCase().includes(filtro.toLowerCase()) ||
     c.fecha?.includes(filtro)
   );
-
-  const handleView = c => {
-    setDetailItem(c);
-    setDetailOpen(true);
-  };
-
-  const handleCancel = c => {
-    setSelectedCancel(c);
-    setCancelOpen(true);
-  };
-
-  const submitCancel = async motivo => {
-    if (!motivo.trim()) return alert("Debes escribir un motivo.");
-    await supabase.from("citas").delete().eq("id", selectedCancel.id);
-    setCitas(prev => prev.filter(x => x.id !== selectedCancel.id));
-    alert("Cita cancelada.");
-    setCancelOpen(false);
-  };
 
   const rolLower = perfil?.rol?.toLowerCase();
   const isAdmin = rolLower === "admin" || rolLower === "administrador";
@@ -160,11 +133,6 @@ const CitasRegistradas = () => {
     <main className="citas-registradas">
       <header className="header">
         <h2>Gestión de Citas</h2>
-        <p className="descripcion">
-          {isAdmin
-            ? "Visualización completa de todas las citas registradas."
-            : "Consulta los registros de tus citas agendadas."}
-        </p>
       </header>
 
       <div className="acciones-citas">
@@ -190,6 +158,7 @@ const CitasRegistradas = () => {
         <div className="grid-citas">
           {filtradas.map(c => (
             <div key={c.id} className="card-cita">
+
               <h3 className="card-title">{c.paciente_nombre}</h3>
 
               <div className="card-subtitle">
@@ -202,25 +171,10 @@ const CitasRegistradas = () => {
                 <span><strong>Hora:</strong> {c.hora}</span>
                 <span><strong>Motivo:</strong> {c.motivo}</span>
               </div>
-
-              <div className="acciones-card">
-                <button className="btn-ver" onClick={() => handleView(c)}>Ver</button>
-                {!isAdmin && (
-                  <button className="btn-eliminar" onClick={() => handleCancel(c)}>Cancelar</button>
-                )}
-              </div>
             </div>
           ))}
         </div>
       )}
-
-      <DetailModal open={detailOpen} onClose={() => setDetailOpen(false)} item={detailItem} />
-
-      <ModalCancelarCita
-        open={cancelOpen}
-        onClose={() => setCancelOpen(false)}
-        onSubmit={submitCancel}
-      />
     </main>
   );
 };

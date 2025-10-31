@@ -8,7 +8,7 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // ==========================================================
-// 📤 SUBIR ARCHIVO SIMPLE (CORREGIDO - SIEMPRE STRING)
+// 📤 SUBIR ARCHIVO SIMPLE (SIEMPRE STRING)
 // ==========================================================
 async function uploadFile(file, folder = '') {
   if (!file) return null;
@@ -25,7 +25,7 @@ async function uploadFile(file, folder = '') {
 
   if (error) {
     const msg = error.message || JSON.stringify(error);
-    if (/bucket not found|404/.test(msg))
+    if (/bucket not found|404/i.test(msg))
       throw new Error(`Storage error: el bucket "${BUCKET}" no existe o no es accesible.`);
     throw error;
   }
@@ -34,7 +34,7 @@ async function uploadFile(file, folder = '') {
     supabase.storage.from(BUCKET).getPublicUrl(data.path) || {};
 
   return {
-    path: `${data.path}`, // ✅ STRING
+    path: `${data.path}`, // ✅ FORZAR STRING
     publicUrl: publicData?.publicUrl || null,
   };
 }
@@ -51,7 +51,7 @@ function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
     .toString(36)
     .slice(2, 8)}_${safeName}`;
 
-  const url = `${SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/${BUCKET}/${path}`;
+  const url = `${SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/${BUCKET}/${encodeURIComponent(path)}`;
 
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -73,7 +73,9 @@ function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
         const { data: publicData } =
           supabase.storage.from(BUCKET).getPublicUrl(path) || {};
         resolve({ path, publicUrl: publicData?.publicUrl || null });
-      } else reject(new Error(`Upload failed with status ${xhr.status}`));
+      } else {
+        reject(new Error(`Upload failed with status ${xhr.status}`));
+      }
     };
 
     xhr.onerror = () => reject(new Error('Network error during upload'));
@@ -170,6 +172,29 @@ async function uploadPdfAndGetPublicUrl(file, folder = '') {
 }
 
 // ==========================================================
+// 🔎 checkBucketExists (Implementada aquí para evitar errores)
+// ==========================================================
+async function checkBucketExists(bucketName = BUCKET) {
+  // Seguridad: si supabase no está listo, devolver false en lugar de romper
+  try {
+    // Supabase no expone listBuckets en todos los clientes, así que intentamos listar el contenido del bucket
+    const { data, error } = await supabase.storage.from(bucketName).list('', { limit: 1 });
+    if (error) {
+      // si recibimos 404 o similar → no existe
+      const msg = error?.message || '';
+      if (/not found|404/i.test(msg)) return false;
+      // otros errores los mostramos en consola y devolvemos false
+      console.warn('checkBucketExists: error comprobando bucket', error);
+      return false;
+    }
+    return Array.isArray(data);
+  } catch (err) {
+    console.warn('checkBucketExists: excepción', err);
+    return false;
+  }
+}
+
+// ==========================================================
 // 🗑️ ELIMINAR ARCHIVO / EXAMEN
 // ==========================================================
 async function deleteFile(path) {
@@ -206,7 +231,7 @@ function validateFile(file, { maxSizeBytes, allowedTypes }) {
 }
 
 // ==========================================================
-// ✅ EXPORTACIÓN FINAL (CORREGIDO — SIN checkBucketExists)
+// ✅ EXPORTACIÓN FINAL (incluye checkBucketExists seguro)
 // ==========================================================
 export default {
   uploadFile,
@@ -218,6 +243,7 @@ export default {
   uploadPdfAndGetSignedPath: uploadPdfAndGetPublicUrl,
   getSignedUrl,
   getPublicUrl,
+  checkBucketExists, // ahora implementada
   deleteFile,
   deleteExamen,
   validateFile,

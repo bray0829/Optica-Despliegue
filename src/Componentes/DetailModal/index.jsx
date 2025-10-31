@@ -10,78 +10,116 @@ const DetailModal = ({ open, onClose, item, tableName, fields = [], onSaved }) =
   const [loadingSignedUrl, setLoadingSignedUrl] = useState(false);
   const [signedUrlError, setSignedUrlError] = useState(null);
 
+  // ✅ función segura para extraer path del PDF
+  const getSafePdfPath = (obj) => {
+    if (!obj) return null;
+
+    // si existe pdf_path y es string → usarlo
+    if (typeof obj.pdf_path === "string" && obj.pdf_path.trim() !== "") {
+      return obj.pdf_path;
+    }
+
+    // si existe archivos[] y el primero es string → usarlo
+    if (Array.isArray(obj.archivos) && typeof obj.archivos[0] === "string") {
+      return obj.archivos[0];
+    }
+
+    // en caso contrario, NO usarlo
+    return null;
+  };
+
   useEffect(() => {
     let mounted = true;
+
     (async () => {
       if (!item) return;
-      // soporte: usar item.pdf_path o el primer archivo en item.archivos
-      const path = item.pdf_path || (Array.isArray(item.archivos) && item.archivos.length ? item.archivos[0] : null);
-      if (!path) return;
+
+      const path = getSafePdfPath(item);
+      if (!path) {
+        setSignedUrl(null);
+        return;
+      }
+
       setLoadingSignedUrl(true);
       try {
-        const url = await examenesService.getSignedUrl(path, 60 * 60);
+        const url = await examenesService.getSignedUrl(path, 3600);
+
         if (!mounted) return;
         setSignedUrl(url);
+
       } catch (err) {
-        console.error('Error fetching signed url', err);
-        setSignedUrlError(err?.message || 'No se pudo obtener URL firmada');
+        console.error("Error fetching signed URL", err);
+        setSignedUrlError(err?.message || "No se pudo obtener URL firmada");
       } finally {
         if (mounted) setLoadingSignedUrl(false);
       }
     })();
-    return () => { mounted = false };
+
+    return () => { mounted = false; };
   }, [item]);
 
   if (!open || !item) return null;
 
   const handleDelete = async () => {
-    if (!confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')) return;
+    if (!confirm("¿Eliminar este registro? Esta acción no se puede deshacer.")) return;
+
     try {
-      if (supabase) {
-        const { error } = await supabase.from(tableName).delete().eq('id', item.id);
-        if (error) throw error;
-        onSaved && onSaved({ action: 'deleted', id: item.id });
-      } else {
-        onSaved && onSaved({ action: 'deleted', id: item.id });
-      }
+      const { error } = await supabase
+        .from(tableName)
+        .delete()
+        .eq("id", item.id);
+
+      if (error) throw error;
+
+      onSaved && onSaved({ action: "deleted", id: item.id });
       onClose();
+
     } catch (err) {
-      console.error('Delete error', err);
-      alert('Error al eliminar. Revisa la consola.');
+      console.error("Delete error", err);
+      alert("Error al eliminar. Revisa la consola.");
     }
   };
-  
 
   return (
     <div className="detail-backdrop">
       <div className="detail-modal">
+
         <header className="detail-header">
           <h3>Detalle</h3>
           <button className="detail-close" onClick={onClose}>✕</button>
         </header>
 
         <div className="detail-body">
-          {item.pdf_path ? (
+
+          {/* ✅ si hay PDF lo mostramos */}
+          {signedUrl ? (
             <div className="pdf-preview">
               {loadingSignedUrl && <div>Obteniendo vista previa del PDF...</div>}
               {signedUrlError && <div className="form-error">{signedUrlError}</div>}
-              {signedUrl && <iframe src={signedUrl} title="PDF Preview" style={{ width: '100%', height: '60vh', border: 'none' }} />}
+              <iframe
+                src={signedUrl}
+                title="PDF Preview"
+                style={{ width: "100%", height: "60vh", border: "none" }}
+              />
             </div>
           ) : (
-            (fields.length === 0 ? (
-              Object.keys(item).map((k) => (
-                <div key={k} className="detail-row"><strong>{k}:</strong> <span>{String(item[k] ?? '')}</span></div>
-              ))
-            ) : (
-              fields.map((k) => (
-                <div key={k} className="detail-row"><strong>{k}:</strong> <span>{String(item[k] ?? '')}</span></div>
-              ))
-            ))
+            // ✅ si NO hay PDF, mostramos los campos normales
+            (fields.length === 0
+              ? Object.keys(item).map((k) => (
+                  <div key={k} className="detail-row">
+                    <strong>{k}:</strong> <span>{String(item[k] ?? "")}</span>
+                  </div>
+                ))
+              : fields.map((k) => (
+                  <div key={k} className="detail-row">
+                    <strong>{k}:</strong> <span>{String(item[k] ?? "")}</span>
+                  </div>
+                ))
+            )
           )}
         </div>
 
         <footer className="detail-footer">
-          {/* Edit removed per UI requirement */}
           <button className="btn btn-danger" onClick={handleDelete}>Eliminar</button>
           <button className="btn btn-cancel" onClick={onClose}>Cerrar</button>
         </footer>
@@ -93,7 +131,11 @@ const DetailModal = ({ open, onClose, item, tableName, fields = [], onSaved }) =
             item={item}
             tableName={tableName}
             fields={fields.length ? fields : Object.keys(item)}
-            onSaved={(res) => { onSaved && onSaved(res); setEditOpen(false); onClose(); }}
+            onSaved={(res) => {
+              onSaved && onSaved(res);
+              setEditOpen(false);
+              onClose();
+            }}
           />
         )}
       </div>

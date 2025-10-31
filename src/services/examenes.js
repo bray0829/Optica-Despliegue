@@ -243,8 +243,8 @@ export default {
   uploadPdfAndGetSignedPath,
   getSignedUrl,
   getPublicUrl,
-  checkBucketExists,
   deleteFile,
   deleteExamen,
   validateFile,
 };
+

@@ -25,9 +25,8 @@ async function uploadFile(file, folder = '') {
 
   if (error) {
     const msg = error.message || JSON.stringify(error);
-    if (/bucket not found|404/.test(msg)) {
+    if (/bucket not found|404/.test(msg))
       throw new Error(`Storage error: el bucket "${BUCKET}" no existe o no es accesible.`);
-    }
     throw error;
   }
 
@@ -35,7 +34,7 @@ async function uploadFile(file, folder = '') {
     supabase.storage.from(BUCKET).getPublicUrl(data.path) || {};
 
   return {
-    path: `${data.path}`,                     // ✅ FORZAR STRING
+    path: `${data.path}`, // ✅ STRING
     publicUrl: publicData?.publicUrl || null,
   };
 }
@@ -45,9 +44,6 @@ async function uploadFile(file, folder = '') {
 // ==========================================================
 function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
   if (!file) return Promise.resolve(null);
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    return Promise.reject(new Error('Supabase no está configurado.'));
-  }
 
   const timestamp = Date.now();
   const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
@@ -55,11 +51,10 @@ function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
     .toString(36)
     .slice(2, 8)}_${safeName}`;
 
+  const url = `${SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/${BUCKET}/${path}`;
+
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    const url = `${SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/${encodeURIComponent(
-      BUCKET
-    )}/${encodeURIComponent(path)}`;
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('apikey', SUPABASE_ANON_KEY);
@@ -69,24 +64,16 @@ function uploadFileWithProgress(file, folder = '', onProgress = () => {}) {
 
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable) {
-        const percent = Math.round((e.loaded / e.total) * 100);
-        onProgress(percent);
+        onProgress(Math.round((e.loaded / e.total) * 100));
       }
     };
 
     xhr.onload = async () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const { data: publicData } =
-            supabase.storage.from(BUCKET).getPublicUrl(path) || {};
-
-          resolve({ path: `${path}`, publicUrl: publicData?.publicUrl || null });
-        } catch (err) {
-          reject(err);
-        }
-      } else {
-        reject(new Error(`Upload failed with status ${xhr.status}`));
-      }
+        const { data: publicData } =
+          supabase.storage.from(BUCKET).getPublicUrl(path) || {};
+        resolve({ path, publicUrl: publicData?.publicUrl || null });
+      } else reject(new Error(`Upload failed with status ${xhr.status}`));
     };
 
     xhr.onerror = () => reject(new Error('Network error during upload'));
@@ -126,22 +113,18 @@ async function updateExamen(id, updates) {
 async function listExamenes(rol, userId) {
   let query = supabase
     .from('examenes')
-    .select(
-      `
-        id,
-        fecha,
-        notas,
-        pdf_path,
-        paciente_id,
-        especialista_id,
-        pacientes ( id, nombre )
-      `
-    )
+    .select(`
+      id,
+      fecha,
+      notas,
+      pdf_path,
+      paciente_id,
+      especialista_id,
+      pacientes ( id, nombre )
+    `)
     .order('fecha', { ascending: false });
 
-  if (rol === 'paciente') {
-    query = query.eq('paciente_id', userId);
-  }
+  if (rol === 'paciente') query = query.eq('paciente_id', userId);
 
   const { data, error } = await query;
   if (error) throw error;
@@ -153,8 +136,7 @@ async function listExamenes(rol, userId) {
 // ==========================================================
 async function getSignedUrl(path, expiresInSeconds = 3600) {
   if (!path) return null;
-
-  const cleanPath = Array.isArray(path) ? path[0] : path; // ✅ FIX
+  const cleanPath = Array.isArray(path) ? path[0] : path;
 
   const { data, error } = await supabase.storage
     .from(BUCKET)
@@ -166,8 +148,7 @@ async function getSignedUrl(path, expiresInSeconds = 3600) {
 
 async function getPublicUrl(path) {
   if (!path) return null;
-
-  const cleanPath = Array.isArray(path) ? path[0] : path; // ✅ FIX
+  const cleanPath = Array.isArray(path) ? path[0] : path;
 
   const { data } = await supabase.storage.from(BUCKET).getPublicUrl(cleanPath);
   return data?.publicUrl || null;
@@ -178,29 +159,23 @@ async function getPublicUrl(path) {
 // ==========================================================
 async function uploadPdfAndGetPublicUrl(file, folder = '') {
   if (!file) throw new Error('No file provided');
-
-  const name = file.name || '';
-  if (!/\.pdf$/i.test(name) && file.type !== 'application/pdf') {
+  if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') {
     throw new Error('Solo se permiten archivos PDF.');
   }
 
   const uploaded = await uploadFile(file, folder);
-  if (!uploaded || !uploaded.path) throw new Error('Error al subir PDF');
+  if (!uploaded?.path) throw new Error('Error al subir PDF');
 
-  return uploaded; // { path, publicUrl }
-}
-
-async function uploadPdfAndGetSignedPath(file, folder = '') {
-  return uploadPdfAndGetPublicUrl(file, folder);
+  return uploaded;
 }
 
 // ==========================================================
-// 🗑️ ELIMINAR ARCHIVO Y EXAMEN
+// 🗑️ ELIMINAR ARCHIVO / EXAMEN
 // ==========================================================
 async function deleteFile(path) {
   if (!path) return { ok: true };
 
-  const cleanPath = Array.isArray(path) ? path[0] : path; // ✅ FIX
+  const cleanPath = Array.isArray(path) ? path[0] : path;
 
   const { error } = await supabase.storage.from(BUCKET).remove([cleanPath]);
   if (error) throw error;
@@ -231,7 +206,7 @@ function validateFile(file, { maxSizeBytes, allowedTypes }) {
 }
 
 // ==========================================================
-// 🧩 EXPORTACIÓN FINAL
+// ✅ EXPORTACIÓN FINAL (CORREGIDO — SIN checkBucketExists)
 // ==========================================================
 export default {
   uploadFile,
@@ -240,11 +215,10 @@ export default {
   updateExamen,
   listExamenes,
   uploadPdfAndGetPublicUrl,
-  uploadPdfAndGetSignedPath,
+  uploadPdfAndGetSignedPath: uploadPdfAndGetPublicUrl,
   getSignedUrl,
   getPublicUrl,
   deleteFile,
   deleteExamen,
   validateFile,
 };
-

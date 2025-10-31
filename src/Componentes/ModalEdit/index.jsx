@@ -7,9 +7,9 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
   const [original, setOriginal] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // 🔄 Mapeo de nombres visuales a nombres reales en la BD
+  /** ✅ Mapeo opcional de campos visuales → DB reales */
   const fieldMap = {
-    archivos: 'pdf_path',
+    archivos: 'pdf_path',           // si un formulario muestra "archivos", se guarda como pdf_path
     paciente: 'paciente_id',
     especialista: 'especialista_id'
   };
@@ -38,6 +38,7 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
         return;
       }
 
+      /** Campos que nunca deben editarse */
       const nonEditable = [
         'id',
         'usuario_id',
@@ -47,21 +48,17 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
         'updated_at'
       ];
 
-      // ✅ Generar payload con solo campos válidos
+      /** ✅ GENERA PAYLOAD DINÁMICO (GENÉRICO) */
       const payload = {};
       for (const key in form) {
-        if (!nonEditable.includes(key) && form[key] !== undefined) {
-          const realKey = fieldMap[key] || key;
+        if (!nonEditable.includes(key)) {
+          const realKey = fieldMap[key] || key; // Usa mapeo solo cuando aplique
           payload[realKey] = form[key];
         }
       }
 
-      // ❌ Eliminar cualquier campo inválido
-      Object.keys(payload).forEach((key) => {
-        if (!['fecha', 'notas', 'motivo', 'estado', 'pdf_path'].includes(key)) {
-          delete payload[key];
-        }
-      });
+      /** ✅ NO BORRAR CAMPOS — dejas que el back valide */
+      // (antes borrabas campos buenos y rompías formularios)
 
       if (Object.keys(payload).length === 0) {
         alert("No hay campos válidos para guardar.");
@@ -88,10 +85,12 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
 
   const handleDelete = async () => {
     if (!confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')) return;
+
     setLoading(true);
     try {
       const { error } = await supabase.from(tableName).delete().eq('id', item.id);
       if (error) throw error;
+
       onSaved && onSaved({ action: 'deleted', id: item.id });
       onClose();
     } catch (err) {
@@ -130,7 +129,7 @@ const ModalEdit = ({ open, onClose, item, tableName, fields = [], onSaved }) => 
                     {f.charAt(0).toUpperCase() + f.slice(1).replace(/([A-Z])/g, ' $1')}
                   </label>
 
-                  {/* 🔽 Si el campo es "estado", mostramos un menú desplegable */}
+                  {/* ✅ Dropdown solo para estado */}
                   {f === 'estado' ? (
                     <select
                       id={f}
